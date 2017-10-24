@@ -5,18 +5,35 @@ import { TabNavigator } from "react-navigation";
 import Icon from 'react-native-vector-icons/Ionicons';
 import { COLORS, SIZING } from "../../styles";
 import Dimensions from 'Dimensions';
+import { Accounts } from 'react-native-meteor';
+import Meteor, { createContainer } from 'react-native-meteor';
 import AppleHealthKit from 'rn-apple-healthkit';
 
 var {height, width} = Dimensions.get('window');
 
-class ConnectAPI extends React.Component {
+class VerifyAccountInfo extends React.Component {
   constructor(props) {
     super(props);
+
+    this.connectHealthkit = this.connectHealthkit.bind(this);
+    this.concatProfile = this.concatProfile.bind(this);
+
+    this.state = {
+      age: '',
+      weight: '',
+      sex: '',
+    }
   }
 
   static navigationOptions = {
     header: null
   };
+
+  concatProfile(key, value) {
+    let newProfile = Meteor.user().profile;
+    newProfile[key] = value;
+    return newProfile;
+  }
 
   connectHealthkit() {
     let options = {
@@ -73,36 +90,33 @@ class ConnectAPI extends React.Component {
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <View style={styles.userNameContainer}>
-            <Text style={styles.screenTitle}>Connect Fitness Apps</Text>
+            <Text style={styles.screenTitle}>Connect Healthkit</Text>
             <Text style={styles.screenSubtitle}>
-              THE EASY WAY TO ADD YOUR PAST AND FUTURE WORKOUTS
+              THE EASY WAY TO ADD YOUR FITNESS INFO
             </Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.connectAppButton} onPress={ this.connectHealthkit }>
-          <Text style={styles.connectAppButtonText}>
+        <TouchableOpacity style={styles.connectHealthkitButton} onPress={ this.connectHealthkit }>
+          <Text style={styles.connectHealthkitButtonText}>
             Connect Healthkit
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.connectAppButton}>
-          <Text style={styles.connectAppButtonText}>
-            Connect Fitbit
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.connectAppButton}>
-          <Text style={styles.connectAppButtonText}>
-            Connect Strava
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.skipStepButton} onPress={ () => this.props.navigation.navigate('VerifyAccountInfo') }>
+        <TouchableOpacity style={styles.skipStepButton} onPress={ () => this.props.navigation.navigate('ConnectAPI') }>
           <Text style={styles.skipStepButtonText}>
             Skip this step (boo)
           </Text>
         </TouchableOpacity>
         <View style={styles.stageButtonContainer}>
-          <TouchableOpacity style={styles.selectedStageButton} disabled={true}>
+          <TouchableOpacity style={styles.selectedStageButton} onPress={() => this.props.navigation.navigate('ConnectHealthkit')}>
             <View style={styles.selectedStageButtonInner}>
               <Text style={styles.selectedStageButtonText}>
+                HEALTHKIT
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.stageButton} disabled={true}>
+            <View style={styles.stageButtonInner}>
+              <Text style={styles.disabledStageButtonText}>
                 APPS
               </Text>
             </View>
@@ -110,14 +124,14 @@ class ConnectAPI extends React.Component {
           <TouchableOpacity style={styles.stageButton} disabled={true}>
             <View style={styles.stageButtonInner}>
               <Text style={styles.disabledStageButtonText}>
-                INFO
+                CONFIRM
               </Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity style={styles.stageButton} disabled={true}>
             <View style={styles.stageButtonInner}>
               <Text style={styles.disabledStageButtonText}>
-                SQUAD + FINISH UP
+                SQUAD
               </Text>
             </View>
           </TouchableOpacity>
@@ -132,7 +146,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.secondaryBackground,
   },
-  connectAppButton: {
+  connectHealthkitButton: {
     backgroundColor: 'rgba(255,255,255,1)',
     padding: SIZING.smallGutter,
     margin: SIZING.smallGutter,
@@ -141,7 +155,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  connectAppButtonText: {
+  connectHealthkitButtonText: {
     color: 'red',
   },
   skipStepButton: {
@@ -219,4 +233,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ConnectAPI;
+export default VerifyAccountInfo;

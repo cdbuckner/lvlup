@@ -4,8 +4,8 @@
 
 import React, { Component } from 'react';
 import { ScrollView, StyleSheet, Text, Image, View, TouchableOpacity } from 'react-native';
-import Icon from '../../../node_modules/react-native-vector-icons/Ionicons';
-import { COLORS, SIZING } from "../../../styles";
+import Icon from '../../node_modules/react-native-vector-icons/Ionicons';
+import { COLORS, SIZING } from "../../styles";
 import Dimensions from 'Dimensions';
 
 let {height, width} = Dimensions.get('window');
@@ -26,15 +26,17 @@ export default (props) => {
         </View>
         <View style={ styles.modificationsContainer }>
           {
-            exercise.mods.map((mod) => {
-              return (
-                <View style={styles.modification}>
-                  <Text style={styles.modificationText}>
-                    { mod.toUpperCase() }
-                  </Text>
-                </View>
-              )
-            })
+            exercise.mods ?
+              exercise.mods.map((mod) => {
+                return (
+                  <View style={styles.modification}>
+                    <Text style={styles.modificationText}>
+                      { mod.toUpperCase() }
+                    </Text>
+                  </View>
+                )
+              })
+            : null
           }
         </View>
       </View>

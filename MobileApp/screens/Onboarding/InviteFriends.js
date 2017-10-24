@@ -5,67 +5,25 @@ import { TabNavigator } from "react-navigation";
 import Icon from 'react-native-vector-icons/Ionicons';
 import { COLORS, SIZING } from "../../styles";
 import Dimensions from 'Dimensions';
+import { Accounts } from 'react-native-meteor';
+import Meteor, { createContainer } from 'react-native-meteor';
 import AppleHealthKit from 'rn-apple-healthkit';
+import Communications from 'react-native-communications';
 
 var {height, width} = Dimensions.get('window');
 
-class ConnectAPI extends React.Component {
+class InviteFriends extends React.Component {
   constructor(props) {
     super(props);
+    this.sendInviteText = this.sendInviteText.bind(this);
   }
 
   static navigationOptions = {
     header: null
   };
 
-  connectHealthkit() {
-    let options = {
-      permissions: {
-        read: ["Weight", "BiologicalSex", "DateOfBirth"],
-      }
-    };
-
-    AppleHealthKit.initHealthKit(options: Object, (err: string, results: Object) => {
-      if (err) {
-        console.log("error initializing Healthkit: ", err);
-        return;
-      }
-
-      AppleHealthKit.getDateOfBirth(null, (err: Object, results: Object) => {
-        if (err) {
-          console.log(err);
-        }
-        if (results) {
-          this.setState({
-            age: results.age
-          })
-        }
-      });
-
-      AppleHealthKit.getBiologicalSex(null, (err: Object, results: Object) => {
-        if (err) {
-          console.log(err);
-        }
-        if (results) {
-          this.setState({
-            sex: results.value
-          })
-        }
-      });
-
-      AppleHealthKit.getLatestWeight(null, (err: Object, results: Object) => {
-        if (err) {
-          console.log(err);
-        }
-        if (results) {
-          this.setState({
-            weight: results.value
-          })
-        }
-      });
-
-      this.props.navigation.navigate('ConnectAPI');
-    });
+  sendInviteText() {
+    Communications.textWithoutEncoding("", "Seriously, get this fitness app:");
   }
 
   render() {
@@ -73,50 +31,50 @@ class ConnectAPI extends React.Component {
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <View style={styles.userNameContainer}>
-            <Text style={styles.screenTitle}>Connect Fitness Apps</Text>
+            <Text style={styles.screenTitle}>Invite Your Friends</Text>
             <Text style={styles.screenSubtitle}>
-              THE EASY WAY TO ADD YOUR PAST AND FUTURE WORKOUTS
+              THIS IS MORE FUN WITH PEOPLE TO TAUNT (OR CHEER)
             </Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.connectAppButton} onPress={ this.connectHealthkit }>
-          <Text style={styles.connectAppButtonText}>
-            Connect Healthkit
+        <TouchableOpacity style={styles.connectHealthkitButton} onPress={ this.sendInviteText }>
+          <Text style={styles.connectHealthkitButtonText}>
+            Invite contacts from your phone
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.connectAppButton}>
-          <Text style={styles.connectAppButtonText}>
-            Connect Fitbit
+        <TouchableOpacity style={styles.connectHealthkitButton}>
+          <Text style={styles.connectHealthkitButtonText}>
+            Invite facebook friends
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.connectAppButton}>
-          <Text style={styles.connectAppButtonText}>
-            Connect Strava
+        <TouchableOpacity style={styles.connectHealthkitButton}>
+          <Text style={styles.connectHealthkitButtonText}>
+            Find friends on levelup
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.skipStepButton} onPress={ () => this.props.navigation.navigate('VerifyAccountInfo') }>
+        <TouchableOpacity style={styles.skipStepButton} onPress={ () => this.props.navigation.navigate('Home') }>
           <Text style={styles.skipStepButtonText}>
-            Skip this step (boo)
+            Skip this step and finish (boo)
           </Text>
         </TouchableOpacity>
         <View style={styles.stageButtonContainer}>
-          <TouchableOpacity style={styles.selectedStageButton} disabled={true}>
-            <View style={styles.selectedStageButtonInner}>
-              <Text style={styles.selectedStageButtonText}>
+          <TouchableOpacity style={styles.stageButton} onPress={() => this.props.navigation.navigate('ConnectAPI')}>
+            <View style={styles.stageButtonInner}>
+              <Text style={styles.stageButtonText}>
                 APPS
               </Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.stageButton} disabled={true}>
+          <TouchableOpacity style={styles.stageButton} onPress={() => this.props.navigation.navigate('VerifyAccountInfo')}>
             <View style={styles.stageButtonInner}>
-              <Text style={styles.disabledStageButtonText}>
+              <Text style={styles.stageButtonText}>
                 INFO
               </Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity style={styles.stageButton} disabled={true}>
             <View style={styles.stageButtonInner}>
-              <Text style={styles.disabledStageButtonText}>
+              <Text style={styles.selectedStageButtonText}>
                 SQUAD + FINISH UP
               </Text>
             </View>
@@ -132,7 +90,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.secondaryBackground,
   },
-  connectAppButton: {
+  connectHealthkitButton: {
     backgroundColor: 'rgba(255,255,255,1)',
     padding: SIZING.smallGutter,
     margin: SIZING.smallGutter,
@@ -141,7 +99,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  connectAppButtonText: {
+  connectHealthkitButtonText: {
     color: 'red',
   },
   skipStepButton: {
@@ -219,4 +177,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ConnectAPI;
+export default InviteFriends;

@@ -16,13 +16,13 @@ if (Meteor.isServer) {
 export default Activities;
 
 Meteor.methods({
-  'activities.new'(activity, text, measurement, needsVerification, owner, private) {
+  'activities.new'(name, text, exercises, needsVerification, owner, private) {
     check(text, String);
 
     console.log({message: 'activities.new fired',
                   text: text,
-                  activity: activity,
-                  measurement: measurement,
+                  name: name,
+                  exercises: exercises,
                   needsVerification: needsVerification,
                   private: private,
                   tauntedBy: [],
@@ -34,15 +34,15 @@ Meteor.methods({
 
     Activities.insert({
       text,
-      activity,
-      measurement,
+      name,
       needsVerification,
       private,
+      exercises: [],
       tauntedBy: [],
       cheeredBy: [],
       verified: false,
       createdAt: new Date(),
-      owner: 1,
+      owner: owner,
       username: owner.username,
       _id: Random.id()
     });

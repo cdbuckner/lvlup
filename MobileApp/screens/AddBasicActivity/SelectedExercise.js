@@ -5,12 +5,85 @@ import { COLORS, SIZING } from "../../styles";
 import Dimensions from 'Dimensions';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Meteor, { createContainer } from 'react-native-meteor';
+import { NavigationActions } from 'react-navigation';
 
 let {height, width} = Dimensions.get('window');
 
 class SelectedExercise extends React.Component {
   constructor(props) {
     super(props);
+
+    this.viewHistory = this.viewHistory.bind(this);
+  }
+
+  viewHistory() {
+    this.props.navigation.navigate('ExerciseHistory');
+  }
+
+  renderColumns() {
+    const { exercise } = this.props;
+
+    if (exercise.measurement == 'reps basic') {
+      return (
+        <View style={styles.addedColumnHeaders}>
+          <View style={styles.setWieghtHeader}>
+            <Text>
+              LBS
+            </Text>
+          </View>
+          <View style={styles.setMeasurementHeader}>
+            <Text>
+              REPS
+            </Text>
+          </View>
+        </View>
+      )
+    } else if (exercise.measurement == 'reps plus') {
+      return (
+        <View style={styles.addedColumnHeaders}>
+          <View style={styles.setWieghtHeader}>
+            <Text>
+              (+LBS)
+            </Text>
+          </View>
+          <View style={styles.setMeasurementHeader}>
+            <Text>
+              REPS
+            </Text>
+          </View>
+        </View>
+      )
+    } else if (exercise.measurement == 'reps minus') {
+      return (
+        <View style={styles.addedColumnHeaders}>
+          <View style={styles.setWieghtHeader}>
+            <Text>
+              (-LBS)
+            </Text>
+          </View>
+          <View style={styles.setMeasurementHeader}>
+            <Text>
+              REPS
+            </Text>
+          </View>
+        </View>
+      )
+    } else if (exercise.measurement == 'time basic') {
+      return (
+        <View style={styles.addedColumnHeaders}>
+          <View style={styles.setWieghtHeader}>
+            <Text>
+              N/A
+            </Text>
+          </View>
+          <View style={styles.setMeasurementHeader}>
+            <Text>
+              TIME
+            </Text>
+          </View>
+        </View>
+      )
+    }
   }
 
   render() {
@@ -21,10 +94,23 @@ class SelectedExercise extends React.Component {
         <View style={styles.exerciseTitleSection}>
           <View style={styles.exerciseTitle}>
             <Text>
-              { exercise.workoutType }
+              { exercise.name }
             </Text>
+            <View style={ styles.modificationsContainer }>
+              {
+                exercise.mods.map((mod) => {
+                  return (
+                    <View style={styles.modification}>
+                      <Text style={styles.modificationText}>
+                        { mod.toUpperCase() }
+                      </Text>
+                    </View>
+                  )
+                })
+              }
+            </View>
           </View>
-          <TouchableOpacity style={styles.historyButton}>
+          <TouchableOpacity style={styles.historyButton} onPress={ this.viewHistory }>
             <Text>
               History
             </Text>
@@ -39,19 +125,10 @@ class SelectedExercise extends React.Component {
             </View>
             <View style={styles.setPreviousHeader}>
               <Text>
-                Previous
+                PREVIOUS
               </Text>
             </View>
-            <View style={styles.setWieghtHeader}>
-              <Text>
-                Weight
-              </Text>
-            </View>
-            <View style={styles.setMeasurementHeader}>
-              <Text>
-                Reps
-              </Text>
-            </View>
+            { this.renderColumns() }
           </View>
           {
             editing ?
@@ -73,19 +150,21 @@ class SelectedExercise extends React.Component {
                       </Text>
                     </View>
                     <View style={styles.setPreviousSection}>
-                      <Text>
-                        { set.previous }
+                      <Text style={styles.setPreviousSectionText}>
+                        { set.previous ? set.previous : 'no previous' }
                       </Text>
                     </View>
                     <TextInput
-                      value={ set.weight }
                       style={styles.setWieghtSection}
+                      placeholder={'add'}
                       keyboardType={'numeric'}
+                      placeholderTextColor={'rgba(0,0,0,0.2)'}
                     />
                     <TextInput
-                      value={ set.measurement }
                       style={styles.setMeasurementSection}
+                      placeholder={'add'}
                       keyboardType={'numeric'}
+                      placeholderTextColor={'rgba(0,0,0,0.2)'}
                     />
                   </View>
                   {
@@ -123,7 +202,9 @@ let styles = StyleSheet.create({
     alignItems: 'center'
   },
   exerciseTitle: {
-
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start'
   },
   historyButton: {
 
@@ -201,6 +282,10 @@ let styles = StyleSheet.create({
     borderRightWidth: 1,
     borderRightColor: '#e8e8e8'
   },
+  setPreviousSectionText: {
+    color: 'rgba(0,0,0,0.2)',
+    fontSize: 12
+  },
   setWieghtSection: {
     textAlign: 'center',
     flexDirection: 'row',
@@ -217,7 +302,8 @@ let styles = StyleSheet.create({
     borderBottomColor: '#e8e8e8',
     height: 30,
     margin: 0,
-    width: width * 0.25
+    width: width * 0.25,
+    fontSize: 12
   },
   setMeasurementSection: {
     textAlign: 'center',
@@ -235,7 +321,8 @@ let styles = StyleSheet.create({
     borderBottomColor: '#e8e8e8',
     height: 30,
     margin: 0,
-    width: width * 0.25
+    width: width * 0.25,
+    fontSize: 12
   },
   columnHeaders: {
     flexDirection: 'row',
@@ -247,6 +334,12 @@ let styles = StyleSheet.create({
     marginLeft: SIZING.smallGutter,
     borderBottomWidth: 1,
     borderBottomColor: '#e8e8e8'
+  },
+  addedColumnHeaders: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,1)',
   },
   setNumberHeader: {
     padding: SIZING.smallGutter,
@@ -281,7 +374,27 @@ let styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: width * 0.25
-  }
+  },
+  modificationsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center'
+  },
+  modification: {
+    paddingTop: 1,
+    paddingBottom: 1,
+    paddingLeft: 2,
+    paddingRight: 2,
+    borderRadius: 2,
+    borderColor: 'rgba(0,0,0,0.3)',
+    borderWidth: 1,
+    marginTop: 3,
+    marginRight: 3
+  },
+  modificationText: {
+    fontSize: 8,
+    color: 'rgba(0,0,0,0.3)'
+  },
 });
 
 export default SelectedExercise;

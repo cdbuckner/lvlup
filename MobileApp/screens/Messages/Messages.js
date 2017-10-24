@@ -29,6 +29,14 @@ class Messages extends React.Component {
     return (
       <View style={styles.container}>
         <ScrollView style={styles.listOfMessages} contentContainerStyle={styles.contentContainer}>
+          <View style={styles.headerContainer}>
+            <View style={styles.userNameContainer}>
+              <Text style={styles.screenTitle}>Messages</Text>
+              <Text style={styles.screenSubtitle}>
+                UPDATES JUST FOR YOU
+              </Text>
+            </View>
+          </View>
           <VerificationRequestCard />
           <ReactionCard />
         </ScrollView>
@@ -44,20 +52,35 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.secondaryBackground,
   },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    width: width,
+    paddingLeft: SIZING.largeGutter,
+    paddingBottom: SIZING.mediumGutter,
+    paddingRight: SIZING.largeGutter,
+  },
+  screenTitle: {
+    fontSize: SIZING.h1,
+    lineHeight: SIZING.h1,
+    fontWeight: '800',
+    marginTop: 60 + SIZING.mediumGutter,
+    marginBottom: 5,
+  },
+  screenSubtitle: {
+    fontSize: 10
+  },
+  headerButton: {
+
+  },
   listOfMessages: {
     flex: 1,
     backgroundColor: COLORS.secondaryBackground,
-    marginTop: SIZING.mediumGutter,
   },
   bumper: {
     height: 20,
-    backgroundColor: COLORS.primaryBackground,
-    marginBottom: SIZING.mediumGutter,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
+    backgroundColor: '#f8f8f8',
     position: 'absolute',
     width: width,
     top: 0,

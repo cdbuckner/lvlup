@@ -12,7 +12,10 @@ var {height, width} = Dimensions.get('window');
 class Splash extends React.Component {
 
   componentWillMount() {
-    let {user} = this.props;
+    let { user } = this.props;
+
+    console.log( 'user is' );
+    console.log( user );
 
     if ( user ) {
       this._navigateTo('Home')
@@ -30,9 +33,7 @@ class Splash extends React.Component {
   }
 
   render() {
-    let {user} = this.props;
-
-    console.log(user);
+    let { user } = this.props;
 
     return (
       <View style={styles.container}>
@@ -43,7 +44,7 @@ class Splash extends React.Component {
 }
 
 const SplashContainer = createContainer( () => {
-  let user = Meteor.collection('users').find();
+  let user = Meteor.user();
 
   return {
     user

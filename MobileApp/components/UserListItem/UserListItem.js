@@ -24,7 +24,7 @@ class UserListItem extends React.Component {
           </View>
         </View>
         <Text style={styles.userName}>
-          {user.name}
+          {user.username}
         </Text>
       </TouchableOpacity>
     );
@@ -33,7 +33,7 @@ class UserListItem extends React.Component {
 
 const styles = StyleSheet.create({
   userContainer: {
-    width: width,
+    width: width * 0.96,
     paddingLeft: SIZING.mediumGutter,
     paddingRight: SIZING.mediumGutter,
     paddingTop: SIZING.smallGutter,
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1
   },
   userRank: {
-    fontSize: SIZING.h2,
+    fontSize: SIZING.p1,
     marginRight: SIZING.mediumGutter
   },
   userImageContainer: {

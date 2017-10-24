@@ -6,6 +6,7 @@ import Dimensions from 'Dimensions';
 import UserListItem from "../../components/UserListItem";
 import Icon from 'react-native-vector-icons/Ionicons';
 import Meteor, { createContainer } from 'react-native-meteor';
+import NoFriends from "../../components/NoFriends";
 
 var {height, width} = Dimensions.get('window');
 
@@ -44,60 +45,31 @@ class Leaders extends React.Component {
     return (
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <View style={styles.listOfUsers}>
-            {
-              users.map((user, index) => {
-                return (
-                  <UserListItem user={user} index={index} navigation={this.props.navigation}/>
-                )
-              })
-            }
+          <View style={styles.headerContainer}>
+            <View style={styles.userNameContainer}>
+              <Text style={styles.screenTitle}>Rankings</Text>
+              <Text style={styles.screenSubtitle}>
+                YOUR FRIENDS, ALL AGES, ALL GENDERS
+              </Text>
+            </View>
+            <TouchableOpacity style={styles.headerButton} onPress={() => this.props.navigation.navigate( 'FilterUserList' ) }>
+              <Icon size={26} name={'ios-funnel-outline'} color={'#000'} />
+            </TouchableOpacity>
           </View>
+          {
+            user.friends > 0 ?
+            <View style={styles.listOfUsers}>
+              {
+                users.map((user, index) => {
+                  return (
+                    <UserListItem user={user} index={index} navigation={this.props.navigation}/>
+                  )
+                })
+              }
+            </View> : <NoFriends />
+          }
+
         </ScrollView>
-        <View style={styles.filterContainer}>
-          <ScrollView horizontal={true} style={styles.filterScroll} contentContainerStyle={styles.filterScrollContentContainer}>
-            <Text style={styles.filterButtonText}>Area:</Text>
-            {
-              this.state.areaFilters.map((filter) => {
-                return (
-                  <TouchableOpacity style={styles.filterButton}>
-                    <Text style={styles.filterButtonText}>
-                      {filter}
-                    </Text>
-                  </TouchableOpacity>
-                )
-              })
-            }
-          </ScrollView>
-          <ScrollView horizontal={true} style={styles.filterScroll} contentContainerStyle={styles.filterScrollContentContainer}>
-            <Text style={styles.filterButtonText}>Age:</Text>
-            {
-              this.state.ageFilters.map((filter) => {
-                return (
-                  <TouchableOpacity style={styles.filterButton}>
-                    <Text style={styles.filterButtonText}>
-                      {filter}
-                    </Text>
-                  </TouchableOpacity>
-                )
-              })
-            }
-          </ScrollView>
-          <ScrollView horizontal={true} style={styles.filterScroll} contentContainerStyle={styles.filterScrollContentContainer}>
-            <Text style={styles.filterButtonText}>Gender:</Text>
-            {
-              this.state.genderFilters.map((filter) => {
-                return (
-                  <TouchableOpacity style={styles.filterButton}>
-                    <Text style={styles.filterButtonText}>
-                      {filter}
-                    </Text>
-                  </TouchableOpacity>
-                )
-              })
-            }
-          </ScrollView>
-        </View>
         <View style={styles.bumper}>
         </View>
       </View>
@@ -136,13 +108,7 @@ const styles = StyleSheet.create({
   },
   bumper: {
     height: 20,
-    backgroundColor: COLORS.primaryBackground,
-    marginBottom: SIZING.mediumGutter,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
+    backgroundColor: '#f8f8f8',
     position: 'absolute',
     width: width,
     top: 0,
@@ -153,49 +119,63 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center'
   },
-  filterScroll: {
-    width: width,
-    paddingLeft: SIZING.mediumGutter,
-    paddingRight: SIZING.mediumGutter,
-    paddingTop: SIZING.smallGutter,
-    paddingBottom: SIZING.smallGutter,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e8e8e8'
-  },
-  filterScrollContentContainer: {
+  headerContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center'
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    width: width,
+    paddingLeft: SIZING.largeGutter,
+    paddingBottom: SIZING.mediumGutter,
+    paddingRight: SIZING.largeGutter,
+    marginBottom: SIZING.smallGutter
   },
-  filterContainer: {
-    backgroundColor: COLORS.primaryBackground,
-    marginBottom: SIZING.mediumGutter,
-    marginTop: 20 + SIZING.mediumGutter,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    position: 'absolute',
+  screenTitle: {
+    fontSize: SIZING.h1,
+    lineHeight: SIZING.h1,
+    fontWeight: '800',
+    marginTop: 60 + SIZING.mediumGutter,
+    marginBottom: 5,
+  },
+  screenSubtitle: {
+    fontSize: 10
+  },
+  headerButton: {
+
   },
   filterButton: {
-    paddingLeft: SIZING.mediumGutter,
-    paddingRight: SIZING.mediumGutter,
-    paddingTop: SIZING.smallGutter,
-    paddingBottom: SIZING.smallGutter
+    width: width * 0.96,
+    backgroundColor: 'rgba(255,255,255,1)',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginTop: SIZING.smallGutter,
+    borderBottomColor: '#e8e8e8',
+    borderBottomWidth: 3,
+    borderTopColor: '#e8e8e8',
+    borderTopWidth: 1,
+    borderLeftColor: '#e8e8e8',
+    borderLeftWidth: 1,
+    borderRightColor: '#e8e8e8',
+    borderRightWidth: 1,
   },
-  filterButtonText: {
-    fontSize: SIZING.p1,
-    lineHeight: SIZING.p1
+  filterButtonSection: {
+    flexGrow: 1,
+    padding: SIZING.mediumGutter,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
   listOfUsers: {
     backgroundColor: '#fff',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    marginTop: 20 + ( SIZING.mediumGutter * 2 ) + (SIZING.smallGutter * 12) + (SIZING.p1 * 3)
+    margin: SIZING.smallGutter,
+    borderBottomColor: '#e8e8e8',
+    borderBottomWidth: 3,
+    borderTopColor: '#e8e8e8',
+    borderTopWidth: 1,
+    borderLeftColor: '#e8e8e8',
+    borderLeftWidth: 1,
+    borderRightColor: '#e8e8e8',
+    borderRightWidth: 1,
   },
 
 });

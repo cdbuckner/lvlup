@@ -5,17 +5,25 @@ import { Root } from "native-base";
 import Meteor, { createContainer }  from 'react-native-meteor';
 import Feed from "./screens/Feed";
 import Leaders from "./screens/Leaders";
+import FilterUserList from "./screens/Leaders/FilterUserList";
 import You from "./screens/You";
 import Messages from "./screens/Messages";
-import AddActivity from "./screens/AddActivity";
+import AddDetailedActivity from "./screens/AddDetailedActivity";
+import AddBasicActivity from "./screens/AddBasicActivity";
 import AddPersonalBest from "./screens/AddPersonalBest";
 import AddMessage from "./screens/AddMessage";
-import SelectExercises from "./screens/AddActivity/SelectExercises";
+import SelectExercises from "./screens/SelectExercises";
 import User from "./screens/User";
 import Splash from "./screens/Splash";
+import ExerciseHistory from "./screens/ExerciseHistory";
+import WorkoutRecap from "./screens/WorkoutRecap";
+import InviteContacts from "./screens/InviteContacts";
+import FindFriends from "./screens/FindFriends";
 import { Login } from "./screens/AccountAccess";
 import { Signup } from "./screens/AccountAccess";
 import { ConnectAPI } from "./screens/Onboarding";
+import { InviteFriends } from "./screens/Onboarding";
+import { VerifyAccountInfo } from "./screens/Onboarding";
 
 let homeRoute = 'AccountAccess';
 let loggedIn = false;
@@ -23,7 +31,6 @@ let loggedIn = false;
 console.disableYellowBox = true;
 
 const Home = TabNavigator({
-  ConnectAPI: { screen: ConnectAPI },
   Feed: { screen: Feed },
   Leaders: { screen: Leaders },
   Messages: { screen: Messages },
@@ -34,19 +41,28 @@ const Home = TabNavigator({
     activeTintColor: '#e91e63',
     style: {
       backgroundColor: '#fff',
-      elevation: 4,
-      shadowColor: "#000",
-      shadowOffset: {width: 0, height: -2},
-      shadowOpacity: 0.1,
-      shadowRadius: 3,
+      borderTopColor: '#e8e8e8',
+      borderTopWidth: 1
     },
     showLabel: false
   },
 });
 
+const Onboarding = StackNavigator({
+  ConnectAPI: { screen: ConnectAPI},
+  VerifyAccountInfo: { screen: VerifyAccountInfo },
+  InviteFriends: { screen: InviteFriends },
+},
+{
+  initialRouteName: 'ConnectAPI',
+  headerMode: 'screen',
+  mode: 'card'
+});
+
 const AccountAccess = StackNavigator({
   Login: { screen: Login},
   Signup: { screen: Signup },
+  Onboarding: { screen: Onboarding },
 },
 {
   initialRouteName: 'Login',
@@ -54,33 +70,21 @@ const AccountAccess = StackNavigator({
   mode: 'card'
 });
 
-const AddActivityModule = StackNavigator({
-  AddActivity: { screen: AddActivity},
-  SelectExercises: { screen: SelectExercises },
-},
-{
-  initialRouteName: 'AddActivity',
-  headerMode: 'none',
-  mode: 'modal'
-});
-
-const CardStack = StackNavigator({
-  User: { screen: User },
-},
-{
-  initialRouteName: 'AddActivity',
-  headerMode: 'screen',
-  mode: 'card'
-});
-
 const App = StackNavigator({
-  Splash: { screen: Splash},
-  Home: { screen: Home},
-  AccountAccess: { screen: AccountAccess},
-  AddActivityModule: { screen: AddActivityModule },
+  Splash: { screen: Splash },
+  Home: { screen: Home },
+  AccountAccess: { screen: AccountAccess },
+  FilterUserList: { screen: FilterUserList },
   AddPersonalBest: { screen: AddPersonalBest },
   AddMessage: { screen: AddMessage },
-  CardStack: { screen: AddMessage }
+  AddDetailedActivity: { screen: AddDetailedActivity },
+  AddBasicActivity: { screen: AddBasicActivity },
+  SelectExercises: { screen: SelectExercises },
+  ExerciseHistory: { screen: ExerciseHistory },
+  WorkoutRecap: { screen: WorkoutRecap },
+  User: { screen: User },
+  InviteContacts: { screen: InviteContacts },
+  FindFriends: { screen: FindFriends },
 },
 {
   initialRouteName: 'Splash',

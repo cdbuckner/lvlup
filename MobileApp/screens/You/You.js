@@ -6,6 +6,7 @@ import UserListItem from "../../components/UserListItem";
 import Dimensions from 'Dimensions';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Meteor, { createContainer } from 'react-native-meteor';
+import NoFriends from "../../components/NoFriends";
 
 var {height, width} = Dimensions.get('window');
 
@@ -32,6 +33,16 @@ class You extends React.Component {
 
   }
 
+  logUserOut() {
+    Meteor.logout((error) => {
+      if (error) {
+        console.log(error);
+      } else {
+        this.props.navigation.navigate('Login');  
+      }
+    });
+  }
+
   render() {
     let {user} = this.props;
 
@@ -42,17 +53,17 @@ class You extends React.Component {
             user ?
 
             <View style={styles.container}>
+
               <View style={styles.headerContainer}>
                 <View style={styles.userNameContainer}>
-                  <Text style={styles.userFirstName}>
-                    {user.username}
-                  </Text>
-                  <Text style={styles.userLastName}>
-                    Christian Buckner
+                  <Text style={styles.screenTitle}>You</Text>
+                  <Text style={styles.userName}>
+                    { user.username.toUpperCase() }
                   </Text>
                 </View>
-                <View style={styles.userImage}>
-                </View>
+                <TouchableOpacity style={styles.headerButton} onPress={() => this.props.navigation.navigate( 'FilterUserList' ) }>
+                  <Icon size={30} name={'ios-construct-outline'} color={'#000'} />
+                </TouchableOpacity>
               </View>
 
               <View style={styles.sectionContainer}>
@@ -73,7 +84,7 @@ class You extends React.Component {
                             {characteristic}
                           </Text>
                           <View style={styles.currentRatingContainer}>
-                            <View style={[styles.currentRatingBar, {width: ((width *  0.88) - 10) * (this.state.characteristics[characteristic] / 100)}]}>
+                            <View style={[styles.currentRatingBar, {width: ((width *  0.84) - 10) * (this.state.characteristics[characteristic] / 100)}]}>
                             </View>
                             <Text style={styles.currentRatingText}>
                               { this.state.characteristics[characteristic] }
@@ -85,27 +96,38 @@ class You extends React.Component {
                   }
                 </View>
               </View>
-              <View style={styles.sectionContainer}>
-                <View style={styles.levelAndTitleContainer}>
-                  <Text style={styles.levelText}>
-                    Friends
-                  </Text>
-                </View>
-                {
-                  this.state.friends.map((user, index) => {
-                    return (
-                      <UserListItem user={user} index={index} navigation={this.props.navigation}/>
-                    )
-                  })
-                }
-                <TouchableOpacity style={styles.inviteFriendsButton}>
-                  <View style={styles.inviteFriendsButtonInner}>
-                    <Text style={styles.inviteFriendsButtonText}>
-                      Invite friends to play
+              {
+                user.friends > 0 ?
+                <View style={styles.sectionContainer}>
+                  <View style={styles.levelAndTitleContainer}>
+                    <Text style={styles.levelText}>
+                      Friends
                     </Text>
                   </View>
-                </TouchableOpacity>
-              </View>
+                  {
+                    this.state.friends.map((user, index) => {
+                      return (
+                        <UserListItem user={user} index={index} navigation={this.props.navigation}/>
+                      )
+                    })
+                  }
+                  <TouchableOpacity style={styles.inviteFriendsButton}>
+                    <View style={styles.inviteFriendsButtonInner}>
+                      <Text style={styles.inviteFriendsButtonText}>
+                        Invite friends to play
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View> : <NoFriends />
+              }
+
+              <TouchableOpacity style={styles.logOutButton} onPress={ this.logUserOut }>
+                <View style={styles.logOutButtonInner}>
+                  <Text style={styles.logOutButtonText}>
+                    Log Out
+                  </Text>
+                </View>
+              </TouchableOpacity>
             </View>
             :
             <Text>Loading</Text>
@@ -150,15 +172,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
+  screenTitle: {
+    fontSize: SIZING.h1,
+    lineHeight: SIZING.h1,
+    fontWeight: '800',
+    marginTop: 60 + SIZING.mediumGutter,
+    marginBottom: 5,
+  },
   bumper: {
     height: 20,
-    backgroundColor: COLORS.primaryBackground,
-    marginBottom: SIZING.mediumGutter,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
+    backgroundColor: '#f8f8f8',
     position: 'absolute',
     width: width,
     top: 0,
@@ -166,28 +189,28 @@ const styles = StyleSheet.create({
   },
   sectionContainer: {
     backgroundColor: COLORS.primaryBackground,
-    width: width,
-    marginBottom: SIZING.mediumGutter,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 3
+    width: width * 0.96,
+    marginLeft: SIZING.smallGutter,
+    marginRight: SIZING.smallGutter,
+    marginBottom: SIZING.smallGutter,
+    borderBottomColor: '#e8e8e8',
+    borderBottomWidth: 3,
+    borderTopColor: '#e8e8e8',
+    borderTopWidth: 1,
+    borderLeftColor: '#e8e8e8',
+    borderLeftWidth: 1,
+    borderRightColor: '#e8e8e8',
+    borderRightWidth: 1,
   },
   headerContainer: {
-    padding: SIZING.mediumGutter,
-    backgroundColor: COLORS.primaryBackground,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     width: width,
-    marginTop: 20 + SIZING.mediumGutter,
-    marginBottom: SIZING.mediumGutter,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 3
+    paddingLeft: SIZING.largeGutter,
+    paddingBottom: SIZING.mediumGutter,
+    paddingRight: SIZING.largeGutter,
+    marginBottom: SIZING.smallGutter,
   },
   characteristicsContainer: {
     paddingBottom: SIZING.mediumGutter,
@@ -217,12 +240,12 @@ const styles = StyleSheet.create({
   userFirstName: {
     fontSize: SIZING.h1
   },
-  userLastName: {
-    fontSize: SIZING.h3
+  userName: {
+    fontSize: 10
   },
   userImage: {
-    height: 60,
-    width: 60,
+    height: 40,
+    width: 40,
     borderRadius: 40,
     backgroundColor: 'blue',
   },
@@ -231,10 +254,12 @@ const styles = StyleSheet.create({
     padding: SIZING.mediumGutter,
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
+    borderBottomColor: '#e8e8e8',
+    borderBottomWidth: 1
   },
   levelText: {
-    fontSize: SIZING.h1,
+    fontSize: SIZING.h3,
   },
   inviteFriendsButton: {
     paddingTop: SIZING.smallGutter,
@@ -250,10 +275,10 @@ const styles = StyleSheet.create({
 
   },
   titleText: {
-    fontSize: SIZING.h3,
+    fontSize: 10,
   },
   characteristic: {
-    width: width,
+    width: width * 0.96,
     paddingTop: SIZING.mediumGutter,
     paddingLeft: SIZING.mediumGutter,
     paddingRight: SIZING.mediumGutter,
@@ -262,14 +287,14 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start'
   },
   characteristicName: {
-    fontSize: SIZING.h2,
+    fontSize: SIZING.p1,
     marginBottom: 5
   },
   currentRatingContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    width: SIZING.fillMediumGutters
+    width: width * 0.88
   },
   currentRatingBar: {
     height: 10,
@@ -277,8 +302,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#e8e8e8'
   },
   currentRatingText: {
-    fontSize: SIZING.p1,
-    lineHeight: SIZING.p1,
+    fontSize: 10,
+    lineHeight: 10,
+  },
+  logOutButton: {
+    backgroundColor: 'rgba(255,255,255,1)',
+    padding: SIZING.mediumGutter,
+    width: width * 0.96,
+    marginLeft: SIZING.smallGutter,
+    marginRight: SIZING.smallGutter,
+    marginBottom: SIZING.smallGutter,
+    borderBottomColor: '#e8e8e8',
+    borderBottomWidth: 3,
+    borderTopColor: '#e8e8e8',
+    borderTopWidth: 1,
+    borderLeftColor: '#e8e8e8',
+    borderLeftWidth: 1,
+    borderRightColor: '#e8e8e8',
+    borderRightWidth: 1,
+  },
+  logOutButtonInner: {
+
+  },
+  logOutButtonText: {
+    textAlign: 'center'
   }
 });
 

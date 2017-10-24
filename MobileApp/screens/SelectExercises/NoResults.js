@@ -4,8 +4,8 @@
 
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import Icon from '../../../node_modules/react-native-vector-icons/MaterialIcons';
-import { COLORS, SIZING } from "../../../styles";
+import Icon from '../../node_modules/react-native-vector-icons/MaterialIcons';
+import { COLORS, SIZING } from "../../styles";
 import Dimensions from 'Dimensions';
 
 let {height, width} = Dimensions.get('window');

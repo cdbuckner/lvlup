@@ -1,6 +1,6 @@
 export default {
     primaryBackground: "#ffffff",
-    secondaryBackground: "#e8e8e8",
+    secondaryBackground: "#f8f8f8",
     primaryHighlight: "#7FFFD4",
     secondaryHighlight: ""
 

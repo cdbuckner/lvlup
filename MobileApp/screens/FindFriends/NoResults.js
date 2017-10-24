@@ -4,17 +4,17 @@
 
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import Icon from '../../../node_modules/react-native-vector-icons/MaterialIcons';
-import { COLORS, SIZING } from "../../../styles";
+import Icon from '../../node_modules/react-native-vector-icons/MaterialIcons';
+import { COLORS, SIZING } from "../../styles";
 import Dimensions from 'Dimensions';
 
 let {height, width} = Dimensions.get('window');
 
 export default (props) => (
     <View>
-      <Text style={ [styles.text] } >
-        Search for contacts to add! They will appear here and you can select those you would like to invite.
-      </Text>
+      <RegularText style={ [styles.text] } >
+        We're sorry we couldn't find any contacts which match your search. Please try again!
+      </RegularText>
     </View>
 )
 

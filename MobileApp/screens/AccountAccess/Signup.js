@@ -29,12 +29,24 @@ class Signup extends React.Component {
   };
 
   createUser() {
-    Accounts.createUser({ username: this.state.email, email: this.state.email, password: this.state.password}, (err) => {
+    Accounts.createUser({
+      username: this.state.email,
+      email: this.state.email,
+      password: this.state.password,
+      profile: {
+        friends: []
+      }
+    }, (err) => {
       if (err) {
         console.log(err);
       } else {
-        this.props.navigation.navigate('Home');
-        console.log(Meteor.user());
+        Meteor.loginWithPassword(this.state.email,this.state.password, (error) => {
+          if (error) {
+            console.log(error);
+          } else {
+            this.props.navigation.navigate('Onboarding');
+          }
+        })
       }
 
     })
@@ -44,19 +56,25 @@ class Signup extends React.Component {
     this.setState({
       email: email
     });
-    console.log(this.state);
   }
 
   updatePassword(password) {
     this.setState({
       password: password
     });
-    console.log(this.state);
   }
 
   render() {
     return (
       <View style={styles.container}>
+        <View style={styles.headerContainer}>
+          <View style={styles.userNameContainer}>
+            <Text style={styles.screenTitle}>Signup</Text>
+            <Text style={styles.screenSubtitle}>
+              {"LEVEL YOURSELF UP"}
+            </Text>
+          </View>
+        </View>
         <Form style={styles.form}>
           <Button rounded block style={styles.submitButton} onPress={() => this.props.navigation.navigate('Login') }>
             <Text>Login with Facebook</Text>
@@ -66,11 +84,11 @@ class Signup extends React.Component {
             <Label>Username</Label>
             <Input onChangeText={ (username) =>  this.updateUsername(username) } />
           </Item>
-          <Item floatingLabel last>
+          <Item floatingLabel>
             <Label>Password</Label>
             <Input onChangeText={ (password) => this.updatePassword(password) } />
           </Item>
-          <Item floatingLabel last>
+          <Item floatingLabel>
             <Label>Confirm Password</Label>
             <Input />
           </Item>
@@ -92,11 +110,33 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.secondaryBackground,
   },
   form: {
-    marginTop: 80
+    marginTop: SIZING.mediumGutter,
   },
   submitButton:{
     marginTop: 20
-  }
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    width: width,
+    paddingLeft: SIZING.largeGutter,
+    paddingBottom: SIZING.mediumGutter,
+    paddingRight: SIZING.largeGutter,
+  },
+  screenTitle: {
+    fontSize: SIZING.h1,
+    lineHeight: SIZING.h1,
+    fontWeight: '800',
+    marginTop: 60 + SIZING.mediumGutter,
+    marginBottom: 5,
+  },
+  screenSubtitle: {
+    fontSize: 10
+  },
+  headerButton: {
+
+  },
 });
 
 export default Signup;

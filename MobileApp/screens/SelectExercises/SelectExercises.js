@@ -1,30 +1,26 @@
-/**
- * Created by tsadykhov on 4/10/17.
- */
+
 
 import React, { Component } from 'react';
-import { Alert, KeyboardAvoidingView, StyleSheet, Text, View, ListView, ScrollView, TextInput, TouchableOpacity, Platform, Keyboard } from 'react-native';
+import { Alert, KeyboardAvoidingView, StyleSheet, Text, View, FlatList, ListView, ScrollView, TextInput, TouchableOpacity, Platform, Keyboard } from 'react-native';
 import _ from 'lodash';
-import Icon from '../../../node_modules/react-native-vector-icons/Ionicons';
+import Icon from '../../node_modules/react-native-vector-icons/Ionicons';
 import Exercise from "./Exercise";
 import NoResults from "./NoResults";
 import StartSearching from "./StartSearching";
-import BackButton from "../../../components/BackButton";
-import EXERCISES from './ExerciseData'
+import BackButton from "../../components/BackButton";
 import Dimensions from 'Dimensions';
 const {height, width} = Dimensions.get('window');
-import { COLORS, SIZING } from "../../../styles";
+import { COLORS, SIZING } from "../../styles";
 import Fuse from 'fuse.js';
+import Accordion from 'react-native-collapsible/Accordion';
 
 class SelectExercises extends Component {
     constructor(props) {
       super(props);
 
-      this.onEndReached = this.onEndReached.bind(this);
       this.onInput = this.onInput.bind(this);
       this.updateLists = this.updateLists.bind(this);
-      this.updateSelectedNumbers = this.updateSelectedNumbers.bind(this);
-      this.updateSelectedNumberByExercise = this.updateSelectedNumberByExercise.bind(this);
+      this.arrayify = this.arrayify.bind(this);
 
       const ds = new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2,
@@ -38,11 +34,10 @@ class SelectExercises extends Component {
         newData: userExercises,
         data: userExercises,
         selectedExercises: [],
-        selectedNumbers: [],
-        dataSource: ds.cloneWithRowsAndSections(userExercises),
+        showAccordion: true,
+        areaDataSource: ds.cloneWithRowsAndSections(userExercises),
+        lettersDataSource: ds.cloneWithRowsAndSections(userExercises),
         submitButtonDisabled: true,
-        numberOfResults: 24,
-        shouldOnEndReachedFire: true
       };
     }
 
@@ -54,25 +49,23 @@ class SelectExercises extends Component {
 
     componentDidMount() {
       let baseExercises = [],
-          baseExercisesWithSections = {},
-          subset = [],
-          subsetWithSections = {};
+          baseExercisesWithSections = {};
 
-      baseExercises = EXERCISES;
-      subset = _.slice(baseExercises, 0, this.state.numberOfResults );
-      subsetWithSections = this.addSections(subset);
+      baseExercises = this.props.navigation.state.params.data;
+      baseExercisesWithLetterSections = this.addLetterSections(baseExercises);
+      baseExercisesWithAreaSections = this.props.navigation.state.params.organize(baseExercises);
 
       this.setState({
         selectedExercises: [],
         data: baseExercises,
         newData: baseExercises,
         originalData: baseExercises,
-        numberOfResults: 24,
-        dataSource: this.state.dataSource.cloneWithRowsAndSections(subsetWithSections)
+        areaDataSource: this.state.areaDataSource.cloneWithRowsAndSections(baseExercisesWithAreaSections),
+        lettersDataSource: this.state.lettersDataSource.cloneWithRowsAndSections(baseExercisesWithLetterSections)
       })
     }
 
-    addSections(data) {
+    addLetterSections(data) {
       let dataWithSections = {};
 
       ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z","Other"].forEach((letter) => {
@@ -92,26 +85,6 @@ class SelectExercises extends Component {
       return dataWithSections;
     }
 
-    onEndReached() {
-      let subset = [],
-          subsetWithSections = {};
-
-      //only load more if not searching for specific person
-      if ( this.state.shouldOnEndReachedFire ) {
-
-        this.setState({
-          numberOfResults: this.state.numberOfResults + 25
-        });
-
-        subset = _.slice(this.state.data, 0, this.state.numberOfResults );
-        subsetWithSections = this.addSections(subset);
-
-        this.setState({
-          dataSource: this.state.dataSource.cloneWithRowsAndSections(subsetWithSections)
-        });
-      }
-    }
-
     //filters the list of exercises, fires when anything is typed in the search bar
     onInput(text) {
       let exercises = [],
@@ -119,10 +92,10 @@ class SelectExercises extends Component {
           exercisesMinusMatchingExercises = [],
           newExercises = [],
           fakeExercises = [],
-          newExercisesWithSections = {},
+          newExercisesWithLetterSections = {},
+          newExercisesWithAreaSections = {},
           resetDataWithSections = {},
           newData = _.cloneDeep(this.state.data),
-          subset = [],
           options = {
             tokenize: true,
             threshold: 0.1,
@@ -151,56 +124,27 @@ class SelectExercises extends Component {
 
         //make a new list with the correct exercises selected and no duplicates
         newExercises = _.union(matchingExercises, exercisesMinusMatchinExercises)
-        newExercisesWithSections = this.addSections(newExercises)
+        newExercisesWithLetterSections = this.addLetterSections(newExercises)
+        newExercisesWithAreaSections = this.props.navigation.state.params.organize(newExercises)
 
         this.setState({
+          showAccordion: false,
           newData: newExercises,
-          dataSource: this.state.dataSource.cloneWithRowsAndSections(newExercisesWithSections),
-          shouldOnEndReachedFire: false
+          areaDataSource: this.state.areaDataSource.cloneWithRowsAndSections(newExercisesWithAreaSections),
+          lettersDataSource: this.state.lettersDataSource.cloneWithRowsAndSections(newExercisesWithLetterSections),
         })
       } else {
 
-        subset = _.slice(newData, 0, this.state.numberOfResults );
-        resetDataWithSections = this.addSections(subset)
+        exercisesWithAreaSections = this.props.navigation.state.params.organize(newData)
 
         //refresh the feed if no text
         this.setState({
+          showAccordion: true,
           newData: newData,
-          dataSource: this.state.dataSource.cloneWithRowsAndSections(resetDataWithSections),
-          shouldOnEndReachedFire: true
+          areaDataSource: this.state.areaDataSource.cloneWithRowsAndSections(exercisesWithAreaSections),
+          lettersDataSource: this.state.lettersDataSource.cloneWithRowsAndSections(newData),
         })
       }
-    }
-
-    updateSelectedNumberByExercise(exercise) {
-      let newSelectedNumbers = _.cloneDeep(this.state.selectedNumbers);
-
-      _.forEach(exercise.phoneNumbers, (numberObject) => {
-        if (  _.includes(this.state.selectedNumbers, numberObject.number ) ) {
-          newSelectedNumbers = _.differenceWith(this.state.selectedNumbers, [ numberObject.number ], _.isEqual);
-        } else {
-          newSelectedNumbers = _.unionWith(this.state.selectedNumbers, [ numberObject.number ], _.isEqual);
-        }
-      })
-
-      this.setState({
-        selectedNumbers: newSelectedNumbers,
-      })
-    }
-
-    updateSelectedNumbers(number) {
-      let newSelectedNumbers = _.cloneDeep(this.state.selectedNumbers);
-
-      //check if this number is already in the list of selected numbers, and correct the list accordingly
-      if (  _.some(this.state.selectedNumbers, number ) ) {
-        newSelectedNumbers = _.differenceWith(this.state.selectedNumbers, [ number ], _.isEqual);
-      } else {
-        newSelectedNumbers = _.unionWith(this.state.selectedNumbers, [ number ], _.isEqual);
-      }
-
-      this.setState({
-        selectedNumbers: newSelectedNumbers,
-      })
     }
 
     updateLists(exercise) {
@@ -240,14 +184,16 @@ class SelectExercises extends Component {
         submitButtonDisabled = true;
       }
 
-      newSelectedExercisesWithSections = this.addSections(tempData);
+      newSelectedExercisesWithLetterSections = this.addLetterSections(tempData);
+      newSelectedExercisesWithAreaSections = this.props.navigation.state.params.organize(tempData);
 
       this.setState({
         selectedExercises: newSelectedExercises,
         submitButtonDisabled: submitButtonDisabled,
         newData: tempData,
         data: newData,
-        dataSource: this.state.dataSource.cloneWithRowsAndSections(newSelectedExercisesWithSections)
+        areaDataSource: this.state.areaDataSource.cloneWithRowsAndSections(newSelectedExercisesWithAreaSections),
+        lettersDataSource: this.state.lettersDataSource.cloneWithRowsAndSections(newSelectedExercisesWithLetterSections)
       })
     }
 
@@ -261,6 +207,48 @@ class SelectExercises extends Component {
       );
     }
 
+    renderAccordionHeader(section, i, isActive) {
+      console.log(section);
+      return (
+        <View style={styles.sectionHeader}>
+          <Text style={[styles.sectionHeaderText]}>
+            { section.title }
+          </Text>
+        </View>
+      );
+    }
+
+    renderAccordionContent = (section, i, isActive) => {
+
+      return (
+        <FlatList
+          data={section.content}
+          style={styles.accordionContentStyle}
+          renderItem={ ( item ) => {
+            return (
+              <Exercise
+                exercise={ item.item }
+                rowId={ item.index }
+                selected={ item.item.isSelected }
+                toggleSelected = { this.updateLists }
+              />
+            );
+          }}
+        />
+      );
+    }
+
+    arrayify(data) {
+      let newArray = [],
+          keysArray = Object.keys(data);
+
+      keysArray.map((area) => {
+        newArray = _.concat(newArray, [{'title':area, 'content': data[area]}])
+      })
+
+      return newArray;
+    }
+
     renderExercises() {
       let { navigator, exerciseSearchLoading, setExerciseResultsShowing, exerciseResultsShowing } = this.props;
 
@@ -271,24 +259,32 @@ class SelectExercises extends Component {
 
       return (
         <View>
-          {this.state.dataSource ?
-            <ListView
-              removeClippedSubviews={false}
-              dataSource={this.state.dataSource}
-              renderSectionHeader={this.renderSectionHeader}
-              keyboardDismissMode='on-drag'
-              onEndReached={() => this.onEndReached()}
-              renderRow={(rowData, sectionId, rowId) => {
-                return (
-                  <Exercise
-                    exercise={ rowData }
-                    rowId={ rowId }
-                    selected={ rowData.isSelected }
-                    toggleSelected = { this.updateLists }
-                  />
-                );
-              }}
-            />
+          { this.state.lettersDataSource ?
+             this.state.showAccordion ?
+              <ScrollView keyboardDismissMode='on-drag' style={styles.accordionScrollViewStyle}>
+                <Accordion
+                  sections={ this.arrayify(this.state.areaDataSource._dataBlob) }
+                  renderHeader={this.renderAccordionHeader}
+                  renderContent={this.renderAccordionContent}
+                  duration={150}
+                />
+              </ScrollView> :
+              <ListView
+                removeClippedSubviews={false}
+                dataSource={this.state.lettersDataSource}
+                renderSectionHeader={this.renderSectionHeader}
+                keyboardDismissMode='on-drag'
+                renderRow={(rowData, sectionId, rowId) => {
+                  return (
+                    <Exercise
+                      exercise={ rowData }
+                      rowId={ rowId }
+                      selected={ rowData.isSelected }
+                      toggleSelected = { this.updateLists }
+                    />
+                  );
+                }}
+              />
             : <NoResults />
           }
         </View>
@@ -326,7 +322,7 @@ class SelectExercises extends Component {
               <ScrollView horizontal={true} style={styles.selectedExerciseContainer} contentContainerStyle={styles.selectedExerciseContainerStyle}>
                 {this.state.selectedExercises.map((selectedExercise) => {
                   return  (
-                    <TouchableOpacity style={styles.selectedExercise} onPress={ () => { this.updateLists(selectedExercise); this.updateSelectedNumberByExercise(selectedExercise); } }>
+                    <TouchableOpacity style={styles.selectedExercise} onPress={ () => { this.updateLists(selectedExercise); } }>
                       <Icon name={"ios-close-outline"} color="#fff" size={20} style={styles.removeSelectedExerciseIcon}/>
                       <Text style={[styles.selectedExerciseText]}>
                         { selectedExercise.name }
@@ -340,7 +336,7 @@ class SelectExercises extends Component {
 
             <TouchableOpacity
               disabled={ this.state.submitButtonDisabled }
-              onPress={ () => this.props.navigation.state.params.addExercises(this.state.selectedExercises) }
+              onPress={ () => { this.props.navigation.state.params.addExercises(this.state.selectedExercises); this.props.navigation.goBack(); } }
               style={ [styles.addExercisesButton, this.state.submitButtonDisabled && styles.addExercisesButtonDisabled] }
             >
               <View>
@@ -456,9 +452,8 @@ const styles = StyleSheet.create({
     },
     sectionHeader: {
       width: width,
-      height: 20,
-      paddingLeft: SIZING.mediumGutter ,
-      backgroundColor: COLORS.darkgrey,
+      padding: SIZING.mediumGutter ,
+      backgroundColor: '#e8e8e8',
       flexDirection: "row",
       justifyContent: "flex-start",
       alignItems: "center"
@@ -466,6 +461,11 @@ const styles = StyleSheet.create({
     sectionHeaderText: {
       color: "#000",
       fontSize: SIZING.p3
+    },
+    accordionScrollViewStyle: {
+      height: height - 155
+    },
+    accordionContentStyle: {
     }
 });
 

@@ -31,6 +31,7 @@
 		3D4370D5DC8F47B588E824BB /* Roboto_medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3262400DCD2B413F85E4C3BC /* Roboto_medium.ttf */; };
 		3D4B4765F9D74C4195A7E54D /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 91C725FEFBC5461284FF99D8 /* SimpleLineIcons.ttf */; };
 		4373977D561B4C6296721734 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 727157E92AB54DBE8F7FA875 /* Foundation.ttf */; };
+		4B7038BBDD954977A30AC1C4 /* libRCTContacts.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 630DB662ABC044F7BA0DE0C5 /* libRCTContacts.a */; };
 		59D370CB5ADD42239D71214D /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE1E5A096B494E4F85EB339E /* MaterialCommunityIcons.ttf */; };
 		5D912572AA654342907CF1C5 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01FFDC2C36604762B3EA49E0 /* Octicons.ttf */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
@@ -301,6 +302,13 @@
 			remoteGlobalIDString = 3D383D621EBD27B9005632C8;
 			remoteInfo = "double-conversion-tvOS";
 		};
+		E8F62C911F992BEC00F00ECA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 25A86E177A2A42E08ABF81B0 /* RCTContacts.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1441618E1BD0A79300FA4F59;
+			remoteInfo = RCTContacts;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -329,6 +337,7 @@
 		19FA3DF9621840CAAEBE182D /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/native-base/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		1A67423EAD764AC2B5115315 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/native-base/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		1D66F94C6BFC1B217D87F744 /* Pods_lvlupTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_lvlupTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		25A86E177A2A42E08ABF81B0 /* RCTContacts.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTContacts.xcodeproj; path = "../node_modules/react-native-contacts/ios/RCTContacts.xcodeproj"; sourceTree = "<group>"; };
 		2A0EB53C23F34623B337C4A4 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		2E81768ED98A4032B6A3B319 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/native-base/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		304B23FF6FC94D02B87E8F39 /* RCTAppleHealthKit.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTAppleHealthKit.xcodeproj; path = "../node_modules/rn-apple-healthkit/RCTAppleHealthKit.xcodeproj"; sourceTree = "<group>"; };
@@ -340,6 +349,7 @@
 		59D9677D8F51DB94DC53CAFD /* Pods-lvlup.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lvlup.debug.xcconfig"; path = "Pods/Target Support Files/Pods-lvlup/Pods-lvlup.debug.xcconfig"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		5EF6F16D8CECB6E842740C52 /* Pods-lvlupTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lvlupTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-lvlupTests/Pods-lvlupTests.release.xcconfig"; sourceTree = "<group>"; };
+		630DB662ABC044F7BA0DE0C5 /* libRCTContacts.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTContacts.a; sourceTree = "<group>"; };
 		65BF18C3B05F419A92A1AE13 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		6D152BAE3AEA4F53857D29F4 /* libRCTAppleHealthKit.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTAppleHealthKit.a; sourceTree = "<group>"; };
 		71C93D1197464932B0CEB5A1 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/native-base/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
@@ -396,6 +406,7 @@
 				80B89FB33944402B99DC23E3 /* libRNVectorIcons.a in Frameworks */,
 				F7740F36CBD247FAB8185ED8 /* libRCTAppleHealthKit.a in Frameworks */,
 				A0B95891729A80878FBB3274 /* Pods_lvlup.framework in Frameworks */,
+				4B7038BBDD954977A30AC1C4 /* libRCTContacts.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -549,6 +560,7 @@
 				BBD8FFC72A974F158EED271E /* RNVectorIcons.xcodeproj */,
 				304B23FF6FC94D02B87E8F39 /* RCTAppleHealthKit.xcodeproj */,
 				E8A184D48FFB4C6AAEA1DBA2 /* OAuthManager.xcodeproj */,
+				25A86E177A2A42E08ABF81B0 /* RCTContacts.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -658,6 +670,14 @@
 				1D66F94C6BFC1B217D87F744 /* Pods_lvlupTests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E8F62C881F992BEC00F00ECA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E8F62C921F992BEC00F00ECA /* libRCTContacts.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		EE9822C63B92C90D9DF71334 /* Pods */ = {
@@ -773,6 +793,10 @@
 				{
 					ProductGroup = ADBDB9201DFEBF0600ED6528 /* Products */;
 					ProjectRef = ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */;
+				},
+				{
+					ProductGroup = E8F62C881F992BEC00F00ECA /* Products */;
+					ProjectRef = 25A86E177A2A42E08ABF81B0 /* RCTContacts.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302B61ABCB90400DB3ED1 /* Products */;
@@ -1062,6 +1086,13 @@
 			remoteRef = E8EB55011F8A2BAC0018E894 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		E8F62C921F992BEC00F00ECA /* libRCTContacts.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTContacts.a;
+			remoteRef = E8F62C911F992BEC00F00ECA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -1268,12 +1299,14 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/rn-apple-healthkit/RCTAppleHealthKit",
 					"$(SRCROOT)/../node_modules/react-native-oauth/ios/OAuthManager/**",
+					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
 				);
 				INFOPLIST_FILE = lvlupTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -1297,12 +1330,14 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/rn-apple-healthkit/RCTAppleHealthKit",
 					"$(SRCROOT)/../node_modules/react-native-oauth/ios/OAuthManager/**",
+					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
 				);
 				INFOPLIST_FILE = lvlupTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -1329,6 +1364,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/rn-apple-healthkit/RCTAppleHealthKit",
 					"$(SRCROOT)/../node_modules/react-native/Libraries/LinkingIOS",
+					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
 				);
 				INFOPLIST_FILE = lvlup/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1355,6 +1391,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/rn-apple-healthkit/RCTAppleHealthKit",
 					"$(SRCROOT)/../node_modules/react-native/Libraries/LinkingIOS",
+					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
 				);
 				INFOPLIST_FILE = lvlup/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

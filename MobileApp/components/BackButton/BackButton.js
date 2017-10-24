@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Alert, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { TabNavigator } from "react-navigation";
 import { COLORS, SIZING } from "../../styles";
 import Dimensions from 'Dimensions';
@@ -12,6 +12,8 @@ import Meteor, { createContainer } from 'react-native-meteor';
 class BackButton extends React.Component {
   constructor(props){
     super(props);
+
+    this.goBack = this.goBack.bind(this);
     this.state = {};
   }
 
@@ -27,11 +29,29 @@ class BackButton extends React.Component {
     }
   }
 
+  goBack() {
+    const { type, navigation, confirmation } = this.props;
+
+    if ( confirmation ) {
+      Alert.alert(
+        'You sure?',
+        'This will erase your current workout',
+        [
+          {text: 'Erase', onPress: () => navigation.dispatch(NavigationActions.back()), style: 'destructive'},
+          {text: 'Cancel'},
+        ],
+        { cancelable: false }
+      );
+    } else {
+      navigation.dispatch(NavigationActions.back());
+    }
+  }
+
   render() {
-    const { type, navigation } = this.props;
+    const { type, navigation, confirmation } = this.props;
 
     return (
-      <TouchableOpacity style={styles.container} onPress={ () => navigation.dispatch(NavigationActions.back()) }>
+      <TouchableOpacity style={styles.container} onPress={ this.goBack }>
         { this.renderIcon() }
       </TouchableOpacity>
     );
@@ -40,7 +60,7 @@ class BackButton extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    paddingLeft: SIZING.mediumGutter
+    paddingLeft: SIZING.largeGutter
   },
   icon: {
 
