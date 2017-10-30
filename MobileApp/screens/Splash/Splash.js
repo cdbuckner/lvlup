@@ -11,22 +11,10 @@ var {height, width} = Dimensions.get('window');
 
 class Splash extends React.Component {
 
-  componentWillMount() {
-    let { user } = this.props;
-
-    console.log( 'user is' );
-    console.log( user );
-
-    if ( user ) {
-      this._navigateTo('Home')
-    } else {
-      this._navigateTo('AccountAccess')
-    }
-  }
-
   _navigateTo = (routeName: string) => {
     const actionToDispatch = NavigationActions.reset({
       index: 0,
+      key: null,
       actions: [NavigationActions.navigate({ routeName })]
     })
     this.props.navigation.dispatch(actionToDispatch)
@@ -34,6 +22,14 @@ class Splash extends React.Component {
 
   render() {
     let { user } = this.props;
+
+    if ( !Meteor.loggingIn()) {
+      if ( user ) {
+        this._navigateTo('Home')
+      } else {
+        this._navigateTo('AccountAccess')
+      }
+    }
 
     return (
       <View style={styles.container}>

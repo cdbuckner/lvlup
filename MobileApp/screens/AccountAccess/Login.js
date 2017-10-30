@@ -15,13 +15,7 @@ class Login extends React.Component {
 
     this.logUserIn = this.logUserIn.bind(this);
 
-    this.state = {
-      user: Meteor.user()
-    }
   }
-  static navigationOptions = {
-    header: null
-  };
 
   logUserIn() {
     Meteor.loginWithPassword('Test','Test', (error) => {
@@ -59,11 +53,27 @@ class Login extends React.Component {
           <Button rounded block style={styles.submitButton} onPress={() => this.props.navigation.navigate('Signup') }>
             <Text>Go to Signup</Text>
           </Button>
+
+          <Button rounded block style={styles.submitButton} onPress={() => console.log(this.props.user)}>
+            <Text>user?</Text>
+          </Button>
         </Form>
       </View>
     );
   }
 }
+
+const LoginContainer = createContainer( () => {
+  let user = Meteor.user();
+
+  return {
+    user
+  };
+}, Login);
+
+LoginContainer.navigationOptions = {
+  header: null
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -111,4 +121,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default LoginContainer;

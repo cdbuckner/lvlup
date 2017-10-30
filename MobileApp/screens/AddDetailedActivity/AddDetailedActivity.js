@@ -32,6 +32,8 @@ class AddDetailedActivity extends React.Component {
     this.startRestTimer = this.startRestTimer.bind(this);
     this.closeToast = this.closeToast.bind(this);
     this.openToast = this.openToast.bind(this);
+    this.addThirtySeconds = this.addThirtySeconds.bind(this);
+    this.subtractThirtySeconds = this.subtractThirtySeconds.bind(this);
 
     this.state = {
       name: "Workout",
@@ -87,19 +89,10 @@ class AddDetailedActivity extends React.Component {
       }
 
       let now = this.state.remainingTime;
-      let msecs = now % 1000;
-
-      if(msecs < 10) {
-        msecs = `00${msecs}`;
-      } else if(msecs < 100) {
-        msecs = `0${msecs}`;
-      }
 
       let seconds = Math.floor(now / 1000);
       let minutes = Math.floor(now / 60000);
-      let hours = Math.floor(now / 3600000);
       seconds = seconds - (minutes * 60);
-      minutes = minutes - (hours * 60);
 
       let formatted = `${minutes < 10 ?
           0 : ""}${minutes}:${seconds < 10 ?
@@ -112,7 +105,67 @@ class AddDetailedActivity extends React.Component {
 
   }
 
+  addThirtySeconds() {
+    clearInterval(this.interval);
+    this.setState({
+      originalTime: this.state.originalTime + 30000,
+    });
+    const endTime = new Date().getTime() + this.state.remainingTime + 30000;
+    this.interval = setInterval(() => {
+      const remaining = endTime - new Date();
+      if(remaining <= 1000) {
+        this.setState({remainingTime: 0});
+        this.closeToast();
+        clearInterval(this.interval);
+        return;
+      }
+
+      let now = this.state.remainingTime;
+
+      let seconds = Math.floor(now / 1000);
+      let minutes = Math.floor(now / 60000);
+      seconds = seconds - (minutes * 60);
+
+      let formatted = `${minutes < 10 ?
+          0 : ""}${minutes}:${seconds < 10 ?
+            0 : ""}${seconds}`;
+
+      this.setState({
+        remainingTime: remaining,
+        timerText: formatted });
+    }, 1);
+  }
+
+  subtractThirtySeconds() {
+    clearInterval(this.interval);
+    const endTime = new Date().getTime() + this.state.remainingTime - 30000;
+    this.interval = setInterval(() => {
+      const remaining = endTime - new Date();
+      if(remaining <= 1000) {
+        this.setState({remainingTime: 0});
+        this.closeToast();
+        clearInterval(this.interval);
+        return;
+      }
+
+      let now = this.state.remainingTime;
+
+      let seconds = Math.floor(now / 1000);
+      let minutes = Math.floor(now / 60000);
+      seconds = seconds - (minutes * 60);
+
+      let formatted = `${minutes < 10 ?
+          0 : ""}${minutes}:${seconds < 10 ?
+            0 : ""}${seconds}`;
+
+      this.setState({
+        remainingTime: remaining,
+        timerText: formatted });
+    }, 1);
+  }
+
   closeToast() {
+    clearInterval(this.interval);
     this.setState({
       toastVisible: false,
       remainingTime: 90000
@@ -120,7 +173,9 @@ class AddDetailedActivity extends React.Component {
   }
 
   openToast() {
+    clearInterval(this.interval);
     this.setState({
+      originalTime: 90000,
       remainingTime: 90000,
       toastVisible: true,
     });
@@ -283,12 +338,12 @@ class AddDetailedActivity extends React.Component {
               </TouchableOpacity>
             </View>
             <View style={styles.toastLowerDeck}>
-              <TouchableOpacity style={styles.toastBottomButton}>
+              <TouchableOpacity style={styles.toastBottomButton} onPress={ this.subtractThirtySeconds }>
                 <Text style={styles.toastBottomButtonText}>
                   - 30 seconds
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.toastBottomButton}>
+              <TouchableOpacity style={styles.toastBottomButton} onPress={ this.addThirtySeconds }>
                 <Text style={styles.toastBottomButtonText}>
                   + 30 seconds
                 </Text>

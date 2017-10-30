@@ -6,17 +6,39 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { COLORS, SIZING } from "../../styles";
 import Dimensions from 'Dimensions';
 import AppleHealthKit from 'rn-apple-healthkit';
+import Meteor, { composeWithTracker } from 'react-native-meteor';
 
 var {height, width} = Dimensions.get('window');
 
 class ConnectAPI extends React.Component {
   constructor(props) {
     super(props);
+
+    this.connectHealthkit = this.connectHealthkit.bind(this);
+    this.saveAndContinue = this.saveAndContinue.bind(this);
+
+    this.state = {
+      age: '',
+      sex: '',
+      weight: '',
+      healthkitConnected: false,
+      ready: false
+    }
   }
 
   static navigationOptions = {
     header: null
   };
+
+  saveAndContinue() {
+    Meteor.call('users.updateHealthkitData', [this.state.age, this.state.sex, this.state.weight], (err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        this.props.navigation.navigate('VerifyAccountInfo');
+      }
+    });
+  }
 
   connectHealthkit() {
     let options = {
@@ -63,8 +85,11 @@ class ConnectAPI extends React.Component {
           })
         }
       });
+    });
 
-      this.props.navigation.navigate('ConnectAPI');
+    this.setState({
+      healthkitConnected: true,
+      ready: true
     });
   }
 
@@ -79,11 +104,48 @@ class ConnectAPI extends React.Component {
             </Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.connectAppButton} onPress={ this.connectHealthkit }>
-          <Text style={styles.connectAppButtonText}>
-            Connect Healthkit
-          </Text>
-        </TouchableOpacity>
+        {
+          this.state.healthkitConnected ?
+          <View style={styles.healthkitDataContainer}>
+            <View style={styles.healthkitDataHeader}>
+              <Text style={styles.healthkitDataSmall}>
+                HEALTHKIT DATA
+              </Text>
+            </View>
+            <View style={styles.healthkitDataBottomRow}>
+              <View style={styles.healthkitDataItem}>
+                <Text style={styles.healthkitDataBig}>
+                  { this.state.age ? this.state.age : "N/A" }
+                </Text>
+                <Text style={styles.healthkitDataSmall}>
+                  AGE
+                </Text>
+              </View>
+              <View style={[styles.healthkitDataItem, styles.centerItem]}>
+                <Text style={styles.healthkitDataBig}>
+                  { this.state.sex ? this.state.sex : "N/A" }
+                </Text>
+                <Text style={styles.healthkitDataSmall}>
+                  SEX
+                </Text>
+              </View>
+              <View style={styles.healthkitDataItem}>
+                <Text style={styles.healthkitDataBig}>
+                  { this.state.weight ? this.state.weight : "N/A" }
+                </Text>
+                <Text style={styles.healthkitDataSmall}>
+                  LBS
+                </Text>
+              </View>
+            </View>
+          </View> :
+          <TouchableOpacity style={styles.connectAppButton} onPress={ this.connectHealthkit }>
+            <Text style={styles.connectAppButtonText}>
+              Connect Healthkit
+            </Text>
+          </TouchableOpacity>
+        }
+
         <TouchableOpacity style={styles.connectAppButton}>
           <Text style={styles.connectAppButtonText}>
             Connect Fitbit
@@ -97,6 +159,11 @@ class ConnectAPI extends React.Component {
         <TouchableOpacity style={styles.skipStepButton} onPress={ () => this.props.navigation.navigate('VerifyAccountInfo') }>
           <Text style={styles.skipStepButtonText}>
             Skip this step (boo)
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.skipStepButton} onPress={ this.saveAndContinue }>
+          <Text style={styles.skipStepButtonText}>
+            Save and continue
           </Text>
         </TouchableOpacity>
         <View style={styles.stageButtonContainer}>
@@ -216,6 +283,55 @@ const styles = StyleSheet.create({
   disabledStageButtonText: {
     fontSize: 10,
     color: '#b8b8b8'
+  },
+  healthkitDataContainer: {
+    width: width * 0.96,
+    margin: SIZING.smallGutter,
+    backgroundColor: '#fff',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    borderBottomColor: '#e8e8e8',
+    borderBottomWidth: 3,
+    borderTopColor: '#e8e8e8',
+    borderTopWidth: 1,
+    borderLeftColor: '#e8e8e8',
+    borderLeftWidth: 1,
+    borderRightColor: '#e8e8e8',
+    borderRightWidth: 1,
+  },
+  healthkitDataItem: {
+    flexGrow: 1,
+    height: 80,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  healthkitDataHeader: {
+    padding: SIZING.smallGutter,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomColor: '#e8e8e8',
+    borderBottomWidth: 1,
+    width: width * 0.96
+  },
+  healthkitDataBig: {
+    fontSize: 28
+  },
+  healthkitDataSmall: {
+    fontSize: 10
+  },
+  centerItem: {
+    borderRightColor: '#e8e8e8',
+    borderRightWidth: 1,
+    borderLeftColor: '#e8e8e8',
+    borderLeftWidth: 1,
+  },
+  healthkitDataBottomRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   }
 });
 

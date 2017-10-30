@@ -7,12 +7,15 @@ import Dimensions from 'Dimensions';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Meteor, { createContainer } from 'react-native-meteor';
 import NoFriends from "../../components/NoFriends";
+import { NavigationActions } from 'react-navigation';
 
 var {height, width} = Dimensions.get('window');
 
 class You extends React.Component {
   constructor(props) {
     super(props);
+
+    this.logUserOut = this.logUserOut.bind(this);
 
     this.state = {
       characteristics: {
@@ -38,9 +41,10 @@ class You extends React.Component {
       if (error) {
         console.log(error);
       } else {
-        this.props.navigation.navigate('Login');  
+
       }
     });
+    this.props.navigation.navigate('AccountAccess');
   }
 
   render() {

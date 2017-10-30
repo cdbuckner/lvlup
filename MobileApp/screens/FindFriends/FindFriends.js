@@ -36,12 +36,6 @@ class FindFriends extends Component {
       };
     }
 
-    static navigationOptions = ({ navigation }) => ({
-      title: 'Find Friends',
-      headerLeft: <BackButton type={'close-x'} navigation={navigation} />,
-      mode: 'modal'
-    });
-
     componentDidMount() {
       let baseUsers = [],
           baseUsersWithSections = {};
@@ -79,7 +73,7 @@ class FindFriends extends Component {
 
     //filters the list of users, fires when anything is typed in the search bar
     onInput(text) {
-      let users = [],
+      let { users } = this.props,
           matchinguUsers = [],
           usersMinusMatchingUsers = [],
           newUsers = [],
@@ -88,7 +82,8 @@ class FindFriends extends Component {
           resetDataWithSections = {};
 
       if (text) {
-        users = Meteor.users.find({ "username" : text });
+
+        users = Meteor.collection('users').find({'username': text})
 
         //compare selected Users (without the isSelected property) to Users searched for
         fakeSelectedUsers = _.cloneDeep(this.state.selectedUsers);
@@ -119,7 +114,7 @@ class FindFriends extends Component {
         //refresh the feed if no text
         this.setState({
           newData: [],
-          dataSource: this.state.dataSource.cloneWithRowsAndSections(newData),
+          dataSource: [],
         })
       }
     }
@@ -269,6 +264,22 @@ class FindFriends extends Component {
     }
 }
 
+const FindFriendsContainer = createContainer( () => {
+  handle = Meteor.subscribe('users');
+  ready = handle.ready();
+
+  return {
+    users: Meteor.collection('users'),
+    ready: ready
+  };
+}, FindFriends);
+
+FindFriendsContainer.navigationOptions = ({ navigation }) => ({
+  title: 'Find Friends',
+  headerLeft: <BackButton type={'close-x'} navigation={navigation} />,
+  mode: 'modal'
+});
+
 const styles = StyleSheet.create({
     modal: {
       height: 300,
@@ -385,4 +396,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default FindFriends;
+export default FindFriendsContainer;

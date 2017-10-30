@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   },
   userLevelText: {
     fontSize: 10,
-    color: '#000'
+    color: '#000',
   },
   upperDeckText: {
     flexDirection: 'column',

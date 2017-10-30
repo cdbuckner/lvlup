@@ -57,18 +57,22 @@ class Leaders extends React.Component {
             </TouchableOpacity>
           </View>
           {
-            user.friends > 0 ?
-            <View style={styles.listOfUsers}>
+            user ?
+            <View>
               {
-                users.map((user, index) => {
-                  return (
-                    <UserListItem user={user} index={index} navigation={this.props.navigation}/>
-                  )
-                })
+                user.friends > 0 ?
+                <View style={styles.listOfUsers}>
+                  {
+                    users.map((user, index) => {
+                      return (
+                        <UserListItem user={user} index={index} navigation={this.props.navigation}/>
+                      )
+                    })
+                  }
+                </View> : <NoFriends />
               }
-            </View> : <NoFriends />
+            </View> : null
           }
-
         </ScrollView>
         <View style={styles.bumper}>
         </View>

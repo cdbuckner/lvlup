@@ -73,17 +73,24 @@ class Feed extends React.Component {
             </View>
           </View>
           {
-            feedActivities.length > 0 ?
-            <FlatList
-              data={feedActivities}
-              renderItem={(activity) => <ActivityCard activity={activity} user={user}/>}
-            /> : null
-          }
-          {
-            user.friends ?
-            null : <NoFriends navigation={ this.props.navigation} />
+            user ?
+            <View>
+              {
+                feedActivities.length > 0 ?
+                <FlatList
+                  data={feedActivities}
+                  renderItem={(activity) => <ActivityCard activity={activity} user={user}/>}
+                /> : null
+              }
+              {
+                user.friends ?
+                null : <NoFriends navigation={ this.props.navigation} />
 
+              }
+            </View> : null
           }
+
+
         </ScrollView>
         <View style={styles.bumper}>
         </View>

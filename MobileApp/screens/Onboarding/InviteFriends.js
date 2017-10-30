@@ -47,7 +47,7 @@ class InviteFriends extends React.Component {
             Invite facebook friends
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.connectHealthkitButton}>
+        <TouchableOpacity style={styles.connectHealthkitButton} onPress={ () => this.props.navigation.navigate('FindFriends') }>
           <Text style={styles.connectHealthkitButtonText}>
             Find friends on levelup
           </Text>

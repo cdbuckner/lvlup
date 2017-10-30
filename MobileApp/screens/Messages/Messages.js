@@ -4,6 +4,7 @@ import { TabNavigator } from "react-navigation";
 import Icon from 'react-native-vector-icons/Ionicons';
 import { COLORS, SIZING } from "../../styles";
 import Dimensions from 'Dimensions';
+import FriendRequestCard from "../../components/FriendRequestCard";
 import VerificationRequestCard from "../../components/VerificationRequestCard";
 import ReactionCard from "../../components/ReactionCard";
 import { NavigationActions } from 'react-navigation'
@@ -38,6 +39,7 @@ class Messages extends React.Component {
             </View>
           </View>
           <VerificationRequestCard />
+          <FriendRequestCard />
           <ReactionCard />
         </ScrollView>
         <View style={styles.bumper}>

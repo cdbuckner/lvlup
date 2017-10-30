@@ -29,6 +29,18 @@ class VerifyAccountInfo extends React.Component {
     this.updateAutoShareIndex = this.updateAutoShareIndex.bind(this);
   }
 
+  componentDidMount() {
+    let {user} = this.props;
+
+    if (user.profile) {
+      this.setState({
+        age: user.profile.age,
+        sex: user.profile.sex,
+        weight: user.profile.weight
+      })
+    }
+
+  }
 
   updatePrivateLevelIndex(privateLevelIndex) {
     this.setState({privateLevelIndex});
@@ -109,7 +121,7 @@ class VerifyAccountInfo extends React.Component {
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.labelText}>Age (years)</Text>
-          <TextInput style={styles.inputText} placeholder={'Add your age'} defaultValue={'28'} onChangeText={ this.onChangeAge } />
+          <TextInput style={styles.inputText} placeholder={'Add your age'} value={this.state.age} onChangeText={ this.onChangeAge } />
           <Text style={styles.validationMessage}>Your levels are adjusted for your age. Only visible to you.</Text>
         </View>
         <View style={styles.inputContainer}>
@@ -140,6 +152,11 @@ class VerifyAccountInfo extends React.Component {
         <TouchableOpacity style={styles.connectAppButton} onPress={ this.updateUserInfo }>
           <Text style={styles.connectAppButtonText}>
             Submit and finish up
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.connectAppButton} onPress={ () => console.log(this.props.user) }>
+          <Text style={styles.connectAppButtonText}>
+            user?
           </Text>
         </TouchableOpacity>
         <View style={styles.stageButtonContainer}>
