@@ -52,7 +52,7 @@ class ActivityCard extends React.Component {
     console.log( activity );
 
     return (
-      <TouchableOpacity style={styles.container}>
+      <View style={styles.container}>
         <View>
           <View style={styles.upperDeckContainer}>
             <View style={styles.userContainer}>
@@ -96,7 +96,7 @@ class ActivityCard extends React.Component {
             </TouchableOpacity>
           </View>
         </View>
-      </TouchableOpacity>
+      </View>
     );
   }
 }
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   },
   userLevelText: {
     fontSize: 10,
-    color: '#000',
+    color: '#000'
   },
   upperDeckText: {
     flexDirection: 'column',

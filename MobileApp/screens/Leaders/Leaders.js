@@ -14,34 +14,11 @@ class Leaders extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      areaFilters: ['Your Friends', 'Global', 'Regional', 'Local'],
-      ageFilters: ['All','Under 18', '19-26', '27-34', '35-42', '43-50', '51-58', '59-66', 'Over 66'],
-      genderFilters: ['All', 'Men', 'Women'],
-      users: [{'name':'Christian Buckner','level': 72 },
-              {'name':'Stephanie Scapa','level': 54 },
-              {'name':'Atlas Buckner','level': 53 },
-              {'name':'Alec Buckner','level': 24 },
-              {'name':'Adam Buckner','level': 24 },
-              {'name':'Dave Buckner','level': 24 },
-              {'name':'Christian Buckner','level': 72 },
-              {'name':'Stephanie Scapa','level': 54 },
-              {'name':'Atlas Buckner','level': 53 },
-              {'name':'Alec Buckner','level': 24 },
-              {'name':'Adam Buckner','level': 24 },
-              {'name':'Dave Buckner','level': 24 },
-              {'name':'Christian Buckner','level': 72 },
-              {'name':'Stephanie Scapa','level': 54 },
-              {'name':'Atlas Buckner','level': 53 },
-              {'name':'Alec Buckner','level': 24 },
-              {'name':'Adam Buckner','level': 24 },
-              {'name':'Dave Buckner','level': 24 }]
-    }
-
   }
 
   render() {
     let { user, users, userCount } = this.props
+
     return (
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -60,7 +37,7 @@ class Leaders extends React.Component {
             user ?
             <View>
               {
-                user.friends > 0 ?
+                user.profile.friends.length > 0 ?
                 <View style={styles.listOfUsers}>
                   {
                     users.map((user, index) => {

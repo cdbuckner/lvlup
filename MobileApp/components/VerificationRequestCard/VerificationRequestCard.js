@@ -68,7 +68,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    width: width
+    width: width * 0.96,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e8e8e8"
   },
   verificationSectionText: {
 
@@ -102,6 +104,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+
   },
   userContainer: {
     flexDirection: 'row',

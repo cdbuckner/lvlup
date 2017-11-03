@@ -15,9 +15,28 @@ class FilterUserList extends React.Component {
     super(props);
 
     this.state = {
-      areaFilters: ['Your Friends', 'Global', 'Regional', 'Local'],
-      ageFilters: ['All','Under 18', '19-26', '27-34', '35-42', '43-50', '51-58', '59-66', 'Over 66'],
-      genderFilters: ['All', 'Men', 'Women'],
+      areaFilters: [
+        {'name': 'Your Friends', 'isSelected': true },
+        {'name':'Global', 'isSelected': false },
+        {'name':'Regional', 'isSelected': false },
+        {'name':'Local', 'isSelected': false }
+      ],
+      ageFilters: [
+        {'name':'All', 'isSelected': true },
+        {'name':'Under 18', 'isSelected': false },
+        {'name':'19-26', 'isSelected': false},
+        {'name':'27-34', 'isSelected': false},
+        {'name':'35-42','isSelected': false},
+        {'name':'43-50', 'isSelected': false},
+        {'name':'51-58', 'isSelected': false},
+        {'name':'59-66', 'isSelected': false},
+        {'name':'Over 66','isSelected':false}
+      ],
+      genderFilters: [
+        {'name':'All', 'isSelected': true},
+        {'name':'Men', 'isSelected': false},
+        {'name':'Women', 'isSelected': false}
+      ],
     }
   }
 

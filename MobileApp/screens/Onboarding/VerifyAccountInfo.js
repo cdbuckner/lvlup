@@ -17,29 +17,17 @@ class VerifyAccountInfo extends React.Component {
     this.state = {
       privateLevelIndex: 2,
       autoShareIndex: 1,
-      sexIndex: 1,
+      sexIndex: 0,
       age: 28,
       weight: 180
     }
+
     this.onChangeAge = this.onChangeAge.bind(this);
     this.onChangeWeight = this.onChangeWeight.bind(this);
     this.updateUserInfo = this.updateUserInfo.bind(this);
     this.updateSexIndex = this.updateSexIndex.bind(this);
     this.updatePrivateLevelIndex = this.updatePrivateLevelIndex.bind(this);
     this.updateAutoShareIndex = this.updateAutoShareIndex.bind(this);
-  }
-
-  componentDidMount() {
-    let {user} = this.props;
-
-    if (user.profile) {
-      this.setState({
-        age: user.profile.age,
-        sex: user.profile.sex,
-        weight: user.profile.weight
-      })
-    }
-
   }
 
   updatePrivateLevelIndex(privateLevelIndex) {
@@ -87,7 +75,7 @@ class VerifyAccountInfo extends React.Component {
       sex = 'male';
     }
 
-    Meteor.call('users.onboard', [Meteor.userId(), privacy, sharing, sex, this.state.age, this.state.weight], (err) => {
+    Meteor.call('users.verifyInfo', privacy, sharing, sex, this.state.age, this.state.weight, (err) => {
       if (err) {
         console.log(err);
       } else {
@@ -97,7 +85,29 @@ class VerifyAccountInfo extends React.Component {
   }
 
   render() {
-    console.log(Meteor.user());
+    let { user } = this.props,
+        sexIndex = 1;
+
+    if (user.profile) {
+      if (user.profile.sex) {
+        if (user.profile.sex == 'male') {
+          sexIndex = 1;
+        } else if (user.profile.sex == 'female') {
+          sexIndex = 0;
+        }
+      }
+    }
+
+    if (user.profile) {
+      this.state = {
+        privateLevelIndex: 2,
+        autoShareIndex: 1,
+        age: user.profile.age,
+        sex: user.profile.sex,
+        weight: user.profile.weight,
+        sexIndex: sexIndex
+      }
+    }
 
     return (
       <View style={styles.container}>
@@ -121,12 +131,12 @@ class VerifyAccountInfo extends React.Component {
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.labelText}>Age (years)</Text>
-          <TextInput style={styles.inputText} placeholder={'Add your age'} value={this.state.age} onChangeText={ this.onChangeAge } />
+          <TextInput style={styles.inputText} placeholder={'Add your age'} value={ this.state.age ? this.state.age.toString() : null } onChangeText={ this.onChangeAge } />
           <Text style={styles.validationMessage}>Your levels are adjusted for your age. Only visible to you.</Text>
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.labelText}>Weight (lbs)</Text>
-          <TextInput style={styles.inputText} placeholder={'Add your weight'} defaultValue={'180'} onChangeText={ this.onChangeWeight }/>
+          <TextInput style={styles.inputText} placeholder={'Add your weight'} value={ this.state.weight ? this.state.weight.toString() : null } onChangeText={ this.onChangeWeight }/>
           <Text style={styles.validationMessage}>Your strength levels are relative to your weight. Only visible to you.</Text>
         </View>
         <View style={styles.inputContainer}>
@@ -152,11 +162,6 @@ class VerifyAccountInfo extends React.Component {
         <TouchableOpacity style={styles.connectAppButton} onPress={ this.updateUserInfo }>
           <Text style={styles.connectAppButtonText}>
             Submit and finish up
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.connectAppButton} onPress={ () => console.log(this.props.user) }>
-          <Text style={styles.connectAppButtonText}>
-            user?
           </Text>
         </TouchableOpacity>
         <View style={styles.stageButtonContainer}>

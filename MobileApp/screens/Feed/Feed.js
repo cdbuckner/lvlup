@@ -83,9 +83,11 @@ class Feed extends React.Component {
                 /> : null
               }
               {
-                user.friends ?
-                null : <NoFriends navigation={ this.props.navigation} />
-
+                user.profile ?
+                  user.profile.friends ?
+                    null
+                  : <NoFriends navigation={ this.props.navigation} />
+                : null
               }
             </View> : null
           }
@@ -100,13 +102,20 @@ class Feed extends React.Component {
 }
 
 const FeedContainer = createContainer( () => {
-  let user = Meteor.user();
-  Meteor.subscribe('activities');
+  let user = Meteor.user(),
+      handle = Meteor.subscribe('activities'),
+      ready = handle.ready(),
+      feedActivities = [];
+
+  if ( ready ) {
+    feedActivities = Meteor.collection('activities').find(
+      {'owner._id': { "$in": user.profile.friends }},
+      { sort: { createdAt: -1 } });
+  }
 
   return {
-    user: user,
-    feedActivities: Meteor.collection('activities').find({}, { sort: { createdAt: -1 } }),
-    feedActivitiesCount: Meteor.collection('activities').find({}).length,
+    user,
+    feedActivities,
   };
 }, Feed);
 

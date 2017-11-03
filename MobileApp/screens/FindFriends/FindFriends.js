@@ -18,10 +18,10 @@ class FindFriends extends Component {
 
       this.onInput = this.onInput.bind(this);
       this.updateLists = this.updateLists.bind(this);
+      this.inviteFriends = this.inviteFriends.bind(this);
 
       const ds = new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2,
-        sectionHeaderHasChanged : (s1, s2) => s1 !== s2
       });
 
       let users = [];
@@ -31,44 +31,9 @@ class FindFriends extends Component {
         newData: users,
         data: users,
         selectedUsers: [],
-        dataSource: ds.cloneWithRowsAndSections(users),
+        dataSource: ds.cloneWithRows(users),
         submitButtonDisabled: true,
       };
-    }
-
-    componentDidMount() {
-      let baseUsers = [],
-          baseUsersWithSections = {};
-
-      baseUsersWithLetterSections = this.addLetterSections(baseUsers);
-
-      this.setState({
-        selectedUsers: [],
-        data: baseUsers,
-        newData: baseUsers,
-        originalData: baseUsers,
-        dataSource: this.state.dataSource.cloneWithRowsAndSections(baseUsersWithLetterSections)
-      })
-    }
-
-    addLetterSections(data) {
-      let dataWithSections = {};
-
-      ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z","Other"].forEach((letter) => {
-
-        if(!dataWithSections[letter]) {
-          dataWithSections[letter] = [];
-        }
-
-        dataWithSections[letter] = data
-          .filter((user) => {
-            if ( user.profile.name.charAt(0).toLowerCase() == letter ) {
-              return user
-            }
-          })
-      })
-
-      return dataWithSections;
     }
 
     //filters the list of users, fires when anything is typed in the search bar
@@ -77,13 +42,11 @@ class FindFriends extends Component {
           matchinguUsers = [],
           usersMinusMatchingUsers = [],
           newUsers = [],
-          fakeUsers = [],
-          newUsersWithLetterSections = {},
-          resetDataWithSections = {};
+          fakeUsers = [];
 
       if (text) {
 
-        users = Meteor.collection('users').find({'username': text})
+        users = users.find({'username': new RegExp( text, 'i' )})
 
         //compare selected Users (without the isSelected property) to Users searched for
         fakeSelectedUsers = _.cloneDeep(this.state.selectedUsers);
@@ -102,19 +65,17 @@ class FindFriends extends Component {
 
         //make a new list with the correct users selected and no duplicates
         newUsers = _.union(matchingUsers, usersMinusMatchinUsers)
-        newUsersWithLetterSections = this.addLetterSections(newUsers)
 
         this.setState({
           newData: newUsers,
-          dataSource: this.state.dataSource.cloneWithRowsAndSections(newUsersWithLetterSections),
+          dataSource: this.state.dataSource.cloneWithRows(newUsers),
         })
       } else {
-
 
         //refresh the feed if no text
         this.setState({
           newData: [],
-          dataSource: [],
+          dataSource: this.state.dataSource.cloneWithRows([]),
         })
       }
     }
@@ -156,25 +117,26 @@ class FindFriends extends Component {
         submitButtonDisabled = true;
       }
 
-      newSelectedUsersWithLetterSections = this.addLetterSections(tempData);
-
       this.setState({
         selectedUsers: newSelectedUsers,
         submitButtonDisabled: submitButtonDisabled,
         newData: tempData,
         data: newData,
-        dataSource: this.state.dataSource.cloneWithRowsAndSections(newSelectedUsersWithLetterSections)
+        dataSource: this.state.dataSource.cloneWithRows(tempData)
       })
     }
 
-    renderSectionHeader(sectionData, sectionHeader) {
-      return (
-        <View style={styles.sectionHeader}>
-          <Text style={[styles.sectionHeaderText]}>
-            {sectionHeader.toUpperCase()}
-          </Text>
-        </View>
-      );
+    inviteFriends() {
+      _.forEach(this.state.selectedUsers, (user) => {
+        Meteor.call('messages.friendInvite', Meteor.user(), user, (err) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log('messages.friendInvite worked');
+            this.props.navigation.goBack();
+          }
+        })
+      })
     }
 
     renderUsers() {
@@ -185,7 +147,6 @@ class FindFriends extends Component {
               <ListView
                 removeClippedSubviews={false}
                 dataSource={this.state.dataSource}
-                renderSectionHeader={this.renderSectionHeader}
                 keyboardDismissMode='on-drag'
                 renderRow={(rowData, sectionId, rowId) => {
                   return (
@@ -236,7 +197,7 @@ class FindFriends extends Component {
                     <TouchableOpacity style={styles.selectedUser} onPress={ () => { this.updateLists(selectedUser); } }>
                       <Icon name={"ios-close-outline"} color="#fff" size={20} style={styles.removeSelectedUserIcon}/>
                       <Text style={[styles.selectedUserText]}>
-                        { selectedUser.name }
+                        { selectedUser.username }
                       </Text>
                     </TouchableOpacity>
                   )
@@ -247,7 +208,7 @@ class FindFriends extends Component {
 
             <TouchableOpacity
               disabled={ this.state.submitButtonDisabled }
-              onPress={ () => { this.props.navigation.state.params.addUsers(this.state.selectedUsers); this.props.navigation.goBack(); } }
+              onPress={ this.inviteFriends }
               style={ [styles.addUsersButton, this.state.submitButtonDisabled && styles.addUsersButtonDisabled] }
             >
               <View>

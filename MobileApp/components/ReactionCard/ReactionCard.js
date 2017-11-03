@@ -17,16 +17,18 @@ class ReactionCard extends React.Component {
           </Text>
         </View>
         <View style={styles.upperDeckContainer}>
-          <View style={styles.userImageContainer}>
-            <View style={styles.userImage}>
+          <View style={styles.userContainer}>
+            <View style={styles.userImageContainer}>
+              <View style={styles.userImage}>
+              </View>
+              <View style={styles.userLevel}>
+                <Text>53</Text>
+              </View>
             </View>
-            <View style={styles.userLevel}>
-              <Text>53</Text>
+            <View style={styles.upperDeckText}>
+              <Text style={styles.userName}>Stephanie Scapa</Text>
+              <Text style={styles.activityDateTime}>September 22, 2017 at 8:10pm</Text>
             </View>
-          </View>
-          <View style={styles.upperDeckText}>
-            <Text style={styles.userName}>Stephanie Scapa</Text>
-            <Text style={styles.activityDateTime}>September 22, 2017 at 8:10pm</Text>
           </View>
         </View>
         <View style={styles.mezzContainer}>
@@ -52,20 +54,6 @@ class ReactionCard extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: COLORS.primaryBackground,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    borderBottomColor: '#e8e8e8',
-    borderBottomWidth: 1,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    marginTop: SIZING.mediumGutter,
-  },
   verificationSection: {
     paddingLeft: SIZING.mediumGutter,
     paddingRight: SIZING.mediumGutter,
@@ -74,21 +62,47 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    width: width
+    width: width * 0.96,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e8e8e8"
   },
   verificationSectionText: {
 
   },
+  container: {
+    backgroundColor: COLORS.primaryBackground,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginBottom: SIZING.smallGutter,
+    marginLeft: SIZING.smallGutter,
+    marginRight: SIZING.smallGutter,
+    borderBottomColor: '#e8e8e8',
+    borderBottomWidth: 3,
+    borderTopColor: '#e8e8e8',
+    borderTopWidth: 1,
+    borderLeftColor: '#e8e8e8',
+    borderLeftWidth: 1,
+    borderRightColor: '#e8e8e8',
+    borderRightWidth: 1,
+    width: width * 0.96
+  },
   upperDeckContainer: {
-    width: width,
+    width: width * 0.96,
     paddingLeft: SIZING.mediumGutter,
     paddingRight: SIZING.mediumGutter,
     paddingTop: SIZING.mediumGutter,
+    paddingBottom: SIZING.mediumGutter,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e8e8e8',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  userContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    borderTopColor: '#e8e8e8',
-    borderTopWidth: 1,
   },
   userImageContainer: {
     width: 45,
@@ -98,22 +112,26 @@ const styles = StyleSheet.create({
     height: 40,
     width: 40,
     borderRadius: 20,
-    backgroundColor: COLORS.primaryHighlight,
+    backgroundColor: '#c8c8c8',
   },
   userLevel: {
-    height: 25,
-    width: 25,
-    borderRadius: 12.5,
-    backgroundColor: COLORS.primaryBackground,
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    backgroundColor: '#fff',
     marginRight: SIZING.mediumGutter,
     borderColor: '#e8e8e8',
     borderWidth: 1,
     position: 'absolute',
     bottom: 0,
-    left: 20,
+    left: 25,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  userLevelText: {
+    fontSize: 10,
+    color: '#000'
   },
   upperDeckText: {
     flexDirection: 'column',
@@ -122,36 +140,29 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontSize: SIZING.p1,
-    paddingBottom: 3
+    paddingBottom: 3,
+    color: '#000'
   },
   activityDateTime: {
     fontSize: SIZING.p2,
-    color: '#666666'
+    color: '#999'
   },
   mezzContainer: {
-    width: width,
-    paddingLeft: (SIZING.mediumGutter * 2) + 45,
-    paddingRight: SIZING.largeGutter,
-    paddingTop: SIZING.mediumGutter,
-    paddingBottom: SIZING.mediumGutter,
+    width: width * 0.96,
+    padding: SIZING.mediumGutter,
   },
   primaryActivityText: {
-    fontSize: SIZING.h2
+    fontSize: SIZING.p1
   },
   lowerDeckContainer: {
-    paddingTop: SIZING.smallGutter,
-    paddingBottom: SIZING.smallGutter,
-    borderTopColor: '#e8e8e8',
-    borderTopWidth: 1,
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderTopColor: '#e8e8e8',
+    borderTopWidth: 1
   },
   cardButton: {
-    paddingLeft: SIZING.mediumGutter,
-    paddingRight: SIZING.mediumGutter,
-    paddingTop: SIZING.smallGutter,
-    paddingBottom: SIZING.smallGutter,
+    padding: SIZING.mediumGutter,
     flex: 1
   },
   cardButtonInner: {
@@ -162,6 +173,14 @@ const styles = StyleSheet.create({
   cardButtonText: {
     fontSize: SIZING.p2,
     marginLeft: 4
+  },
+  cardMenuButton: {
+    padding: SIZING.smallGutter,
+  },
+  cardMenuButtonInner: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });
 

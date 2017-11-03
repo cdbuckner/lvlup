@@ -31,10 +31,11 @@ class ConnectAPI extends React.Component {
   };
 
   saveAndContinue() {
-    Meteor.call('users.updateHealthkitData', [this.state.age, this.state.sex, this.state.weight], (err) => {
+    Meteor.call('users.updateHealthkitData', this.state.weight, this.state.age, this.state.sex, (err) => {
       if (err) {
         console.log(err);
       } else {
+        console.log(this.state.weight);
         this.props.navigation.navigate('VerifyAccountInfo');
       }
     });

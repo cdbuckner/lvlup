@@ -14,10 +14,26 @@ class Login extends React.Component {
     super(props);
 
     this.logUserIn = this.logUserIn.bind(this);
+    this.logTestIn = this.logTestIn.bind(this);
+
+    this.state = {
+      username: '',
+      password: ''
+    }
 
   }
 
   logUserIn() {
+    Meteor.loginWithPassword(this.state.username, this.state.password, (error) => {
+      if (error) {
+        console.log(error);
+      } else {
+        this.props.navigation.navigate('Home');
+      }
+    })
+  }
+
+  logTestIn() {
     Meteor.loginWithPassword('Test','Test', (error) => {
       if (error) {
         console.log(error);
@@ -41,11 +57,11 @@ class Login extends React.Component {
         <Form style={styles.form}>
           <Item floatingLabel >
             <Label>Username</Label>
-            <Input />
+            <Input onChangeText={(text) => this.setState({username: text})} />
           </Item>
           <Item floatingLabel>
             <Label>Password</Label>
-            <Input />
+            <Input onChangeText={(text) => this.setState({password: text})} />
           </Item>
           <Button rounded block style={styles.submitButton} onPress={ this.logUserIn }>
             <Text>Login</Text>
@@ -54,8 +70,8 @@ class Login extends React.Component {
             <Text>Go to Signup</Text>
           </Button>
 
-          <Button rounded block style={styles.submitButton} onPress={() => console.log(this.props.user)}>
-            <Text>user?</Text>
+          <Button rounded block style={styles.submitButton} onPress={this.logTestIn}>
+            <Text>Log Test In</Text>
           </Button>
         </Form>
       </View>

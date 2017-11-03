@@ -48,7 +48,8 @@ class You extends React.Component {
   }
 
   render() {
-    let {user} = this.props;
+    let { user, friends } = this.props;
+    console.log(friends);
 
     return (
       <View style={styles.container}>
@@ -101,7 +102,7 @@ class You extends React.Component {
                 </View>
               </View>
               {
-                user.friends > 0 ?
+                friends.length > 0 ?
                 <View style={styles.sectionContainer}>
                   <View style={styles.levelAndTitleContainer}>
                     <Text style={styles.levelText}>
@@ -109,7 +110,7 @@ class You extends React.Component {
                     </Text>
                   </View>
                   {
-                    this.state.friends.map((user, index) => {
+                    friends.map((user, index) => {
                       return (
                         <UserListItem user={user} index={index} navigation={this.props.navigation}/>
                       )
@@ -146,10 +147,22 @@ class You extends React.Component {
 }
 
 const YouContainer = createContainer( params => {
-  let user = Meteor.user();
+  let user = Meteor.user(),
+      friends = [],
+      handle = Meteor.subscribe('users'),
+      ready = handle.ready();
+
+  if ( ready ) {
+    if ( user ) {
+      friends = Meteor.collection('users').find({
+          "_id": { "$in": user.profile.friends }
+      });
+    }
+  }
 
   return {
     user,
+    friends
   };
 }, You);
 

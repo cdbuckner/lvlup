@@ -34,7 +34,11 @@ class Signup extends React.Component {
       email: this.state.email,
       password: this.state.password,
       profile: {
-        friends: []
+        friends: [],
+        age: 0,
+        sex: '',
+        weight: 0,
+        level: 0
       }
     }, (err) => {
       if (err) {

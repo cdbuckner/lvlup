@@ -27,6 +27,7 @@ class InviteFriends extends React.Component {
   }
 
   render() {
+    
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer}>

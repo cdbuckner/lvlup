@@ -11,38 +11,23 @@ import Dimensions from 'Dimensions';
 let {height, width} = Dimensions.get('window');
 
 export default (props) => {
-  let { exercise, selected, toggleSelected, rowId } = props;
+  let { user, selected, toggleSelected, rowId } = props;
 
   return (
     <TouchableOpacity
       style={ styles.button }
-      onPress={() => toggleSelected(exercise)}
+      onPress={() => toggleSelected(user)}
     >
       <View style={ styles.contactInfo }>
         <View style={ styles.nameContainer }>
           <Text style={ [styles.name] }>
-            { exercise.name}
+            { user.username}
           </Text>
-        </View>
-        <View style={ styles.modificationsContainer }>
-          {
-            exercise.mods ?
-              exercise.mods.map((mod) => {
-                return (
-                  <View style={styles.modification}>
-                    <Text style={styles.modificationText}>
-                      { mod.toUpperCase() }
-                    </Text>
-                  </View>
-                )
-              })
-            : null
-          }
         </View>
       </View>
 
       <Icon
-        name={ exercise.isSelected ? "ios-checkmark-circle-outline" : "ios-radio-button-off-outline" }
+        name={ user.isSelected ? "ios-checkmark-circle-outline" : "ios-radio-button-off-outline" }
         color="black"
         size={18}
         style={styles.selectedIcon}

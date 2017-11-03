@@ -20,7 +20,7 @@ class UserListItem extends React.Component {
           <View style={styles.userImage}>
           </View>
           <View style={styles.userLevel}>
-            <Text>{user.level}</Text>
+            <Text style={styles.userLevelText}>{user.profile.level}</Text>
           </View>
         </View>
         <Text style={styles.userName}>
@@ -45,8 +45,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1
   },
   userRank: {
-    fontSize: SIZING.p1,
-    marginRight: SIZING.mediumGutter
+    marginRight: SIZING.mediumGutter,
   },
   userImageContainer: {
     width: 45,
@@ -56,26 +55,41 @@ const styles = StyleSheet.create({
     height: 40,
     width: 40,
     borderRadius: 20,
-    backgroundColor: 'blue',
+    backgroundColor: '#c8c8c8',
   },
   userLevel: {
-    height: 25,
-    width: 25,
-    borderRadius: 12.5,
-    backgroundColor: COLORS.primaryBackground,
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    backgroundColor: '#fff',
     marginRight: SIZING.mediumGutter,
     borderColor: '#e8e8e8',
     borderWidth: 1,
     position: 'absolute',
     bottom: 0,
-    left: 20,
+    left: 25,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
+  userLevelText: {
+    fontSize: 10,
+    color: '#000'
+  },
+  upperDeckText: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start'
+  },
   userName: {
-
-  }
+    fontSize: SIZING.p1,
+    paddingBottom: 3,
+    color: '#000'
+  },
+  activityDateTime: {
+    fontSize: SIZING.p2,
+    color: '#999'
+  },
 });
 
 export default UserListItem;

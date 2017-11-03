@@ -7,26 +7,23 @@ import Dimensions from 'Dimensions';
 import FriendRequestCard from "../../components/FriendRequestCard";
 import VerificationRequestCard from "../../components/VerificationRequestCard";
 import ReactionCard from "../../components/ReactionCard";
-import { NavigationActions } from 'react-navigation'
+import FriendRequestReactionCard from "../../components/FriendRequestReactionCard";
+import { NavigationActions } from 'react-navigation';
+import Meteor, { createContainer } from 'react-native-meteor';
+import NoFriends from "../../components/NoFriends";
+import NoMessages from "../../components/NoMessages";
 
 var {height, width} = Dimensions.get('window');
 
-
 class Messages extends React.Component {
-  static navigationOptions = {
-    tabBarLabel: 'Messages',
-    // Note: By default the icon is only shown on iOS. Search the showIcon option below.
-    tabBarIcon: ({ tintColor }) => (
-      <Icon
-        size={24}
-        name={'ios-chatbubbles-outline'}
-        color={tintColor}
-      />
-    ),
-    header: null
-  };
+  constructor(props) {
+    super(props);
+
+  }
 
   render() {
+    let { user, userMessages } = this.props;
+
     return (
       <View style={styles.container}>
         <ScrollView style={styles.listOfMessages} contentContainerStyle={styles.contentContainer}>
@@ -38,9 +35,22 @@ class Messages extends React.Component {
               </Text>
             </View>
           </View>
-          <VerificationRequestCard />
-          <FriendRequestCard />
-          <ReactionCard />
+          <View>
+            {
+              userMessages.length > 0 ?
+                userMessages.map((message) => {
+                  if (message.type == 'friend invite') {
+                    return ( <FriendRequestCard data={message} /> )
+                  } else if (message.type == 'verification request') {
+                    return ( <VerificationRequestCard data={message} /> )
+                  } else if (message.type == 'reaction') {
+                    return ( <ReactionCard data={message} /> )
+                  } else if (message.type == 'friend invite approved' || message.type == 'friend invite declined' ) {
+                    return ( <FriendRequestReactionCard data={message} /> )
+                  }
+                }) : <NoMessages />
+            }
+          </View>
         </ScrollView>
         <View style={styles.bumper}>
         </View>
@@ -48,6 +58,39 @@ class Messages extends React.Component {
     );
   }
 }
+
+const MessagesContainer = createContainer( () => {
+  let user = Meteor.user(),
+      handle = Meteor.subscribe('messages'),
+      ready = handle.ready(),
+      userMessages = [];
+
+  if ( ready ) {
+    if ( user ) {
+      userMessages = Meteor.collection('messages').find(
+        { 'to._id': user._id },
+        { sort: { createdAt: -1 } });
+    }
+  }
+
+  return {
+    user: user,
+    userMessages: userMessages,
+  };
+}, Messages);
+
+MessagesContainer.navigationOptions = {
+  tabBarLabel: 'Messages',
+  // Note: By default the icon is only shown on iOS. Search the showIcon option below.
+  tabBarIcon: ({ tintColor }) => (
+    <Icon
+      size={24}
+      name={'ios-chatbubbles-outline'}
+      color={tintColor}
+    />
+  ),
+  header: null
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -60,7 +103,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     width: width,
     paddingLeft: SIZING.largeGutter,
-    paddingBottom: SIZING.mediumGutter,
+    paddingBottom: SIZING.largeGutter,
     paddingRight: SIZING.largeGutter,
   },
   screenTitle: {
@@ -93,62 +136,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center'
   },
-  upperDeckContainer: {
-    width: width,
-    paddingLeft: SIZING.mediumGutter,
-    paddingRight: SIZING.mediumGutter,
-    paddingTop: SIZING.mediumGutter,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  userImageContainer: {
-    width: 45,
-    marginRight: SIZING.mediumGutter
-  },
-  userImage: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-    backgroundColor: COLORS.primaryHighlight,
-  },
-  userLevel: {
-    height: 25,
-    width: 25,
-    borderRadius: 12.5,
-    backgroundColor: COLORS.primaryBackground,
-    marginRight: SIZING.mediumGutter,
-    borderColor: '#e8e8e8',
-    borderWidth: 1,
-    position: 'absolute',
-    bottom: 0,
-    left: 20,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  upperDeckText: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'flex-start'
-  },
-  userName: {
-    fontSize: SIZING.p1,
-    paddingBottom: 3
-  },
-  activityDateTime: {
-    fontSize: SIZING.p2,
-    color: '#666666'
-  },
-  mezzContainer: {
-    width: width,
-    paddingLeft: (SIZING.mediumGutter * 2) + 45,
-    paddingRight: SIZING.largeGutter,
-    paddingTop: SIZING.mediumGutter,
-  },
-  primaryActivityText: {
-    fontSize: SIZING.h2
-  },
+
 });
 
-export default Messages;
+export default MessagesContainer;
